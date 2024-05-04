@@ -32,9 +32,27 @@ import IconMenuDatatables from '@/components/Icon/Menu/IconMenuDatatables';
 import IconMenuForms from '@/components/Icon/Menu/IconMenuForms';
 import IconMenuPages from '@/components/Icon/Menu/IconMenuPages';
 import IconMenuMore from '@/components/Icon/Menu/IconMenuMore';
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 const Header = () => {
     const router = useRouter();
+    const { user, error, isLoading } = useUser();
+    const [currentUser, setCurrentUser] = useState({
+        name: 'John Doe',
+        email: 'johndoe@email.com',
+        profilePicture: '/assets/images/user-profile.jpeg',
+    })
+
+    useEffect(() => {
+        if (user) {
+            setCurrentUser({
+                name: user.name || 'John Doe',
+                email: user.email || 'johndoe@email.com',
+                profilePicture: user.picture || '/assets/images/default-profile.jpeg'
+            })
+        }
+    }, [user])
+
 
     useEffect(() => {
         const selector = document.querySelector('ul.horizontal-menu a[href="' + window.location.pathname + '"]');
@@ -171,10 +189,9 @@ const Header = () => {
                         <div>
                             {themeConfig.theme === 'light' ? (
                                 <button
-                                    className={`${
-                                        themeConfig.theme === 'light' &&
+                                    className={`${themeConfig.theme === 'light' &&
                                         'flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
-                                    }`}
+                                        }`}
                                     onClick={() => dispatch(toggleTheme('dark'))}
                                 >
                                     <IconSun />
@@ -184,10 +201,9 @@ const Header = () => {
                             )}
                             {themeConfig.theme === 'dark' && (
                                 <button
-                                    className={`${
-                                        themeConfig.theme === 'dark' &&
+                                    className={`${themeConfig.theme === 'dark' &&
                                         'flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
-                                    }`}
+                                        }`}
                                     onClick={() => dispatch(toggleTheme('system'))}
                                 >
                                     <IconMoon />
@@ -195,10 +211,9 @@ const Header = () => {
                             )}
                             {themeConfig.theme === 'system' && (
                                 <button
-                                    className={`${
-                                        themeConfig.theme === 'system' &&
+                                    className={`${themeConfig.theme === 'system' &&
                                         'flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
-                                    }`}
+                                        }`}
                                     onClick={() => dispatch(toggleTheme('light'))}
                                 >
                                     <IconLaptop />
@@ -210,19 +225,19 @@ const Header = () => {
                                 offset={[0, 8]}
                                 placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
                                 btnClassName="relative group block"
-                                button={<img className="h-9 w-9 rounded-full object-cover saturate-50 group-hover:saturate-100" src="/assets/images/user-profile.jpeg" alt="userProfile" />}
+                                button={<img className="h-9 w-9 rounded-full object-cover saturate-50 group-hover:saturate-100" src={currentUser.profilePicture} alt="userProfile" />}
                             >
                                 <ul className="w-[230px] !py-0 font-semibold text-dark dark:text-white-dark dark:text-white-light/90">
                                     <li>
                                         <div className="flex items-center px-4 py-4">
-                                            <img className="h-10 w-10 rounded-md object-cover" src="/assets/images/user-profile.jpeg" alt="userProfile" />
+                                            <img className="h-10 w-10 rounded-md object-cover" src={currentUser.profilePicture} alt="userProfile" />
                                             <div className="truncate ltr:pl-4 rtl:pr-4">
                                                 <h4 className="text-base">
-                                                    John Doe
+                                                    {currentUser?.name}
                                                     <span className="rounded bg-success-light px-1 text-xs text-success ltr:ml-2 rtl:ml-2">Pro</span>
                                                 </h4>
                                                 <button type="button" className="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white">
-                                                    johndoe@gmail.com
+                                                    {currentUser?.email}
                                                 </button>
                                             </div>
                                         </div>
@@ -234,7 +249,7 @@ const Header = () => {
                                         </Link>
                                     </li>
                                     <li className="border-t border-white-light dark:border-white-light/10">
-                                        <Link href="/auth/boxed-signin" className="!py-3 text-danger">
+                                        <Link href="/api/auth/logout" className="!py-3 text-danger">
                                             <IconLogout className="h-4.5 w-4.5 shrink-0 rotate-90 ltr:mr-2 rtl:ml-2" />
                                             Sign Out
                                         </Link>

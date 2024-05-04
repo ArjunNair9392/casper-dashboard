@@ -4,15 +4,15 @@ import { setPageTitle } from '../../store/themeConfigSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import IconUserPlus from '@/components/Icon/IconUserPlus';
 import { Dialog, Transition } from '@headlessui/react';
-import { IRootState } from '../../store';
+import { googleAuthURL } from '../../helpers/constants';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import IconX from '@/components/Icon/IconX';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import sortBy from 'lodash/sortBy';
-import IconBell from '@/components/Icon/IconBell';
-import debounce from 'lodash/debounce'; // Import debounce function
+import { getListFiles } from '../../services/listFiles';
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 interface FileData {
     id: string;
@@ -20,9 +20,13 @@ interface FileData {
     webViewLink: string;
 }
 
-const ListFiles = ({ onSave }) => {
+interface Props {
+    onSave: ([]) => void;
+}
+
+const ListFiles: React.FC<Props> = ({ onSave }) => {
     const dispatch = useDispatch();
-    
+    const { user, error, isLoading } = useUser();
     const [rowData, setRowData] = useState<FileData[]>([]);
     const [modal2, setModal2] = useState(false);
     const [page, setPage] = useState(1);
@@ -32,50 +36,60 @@ const ListFiles = ({ onSave }) => {
     const [recordsData, setRecordsData] = useState<FileData[]>([]);
     const [search, setSearch] = useState('');
     const [selectedRecords, setSelectedRecords] = useState<any>([]);
+    const [refreshCode, setRefreshCode] = useState('');
 
-    const convertToFileRowData = (files: any[]) => {
-        return files.map((file) => ({
-          id: file.id,
-          name: file.name,
-          webViewLink: file.webViewLink
-        }));
-    };
+    // const convertToFileRowData = (files: any[]) => {
+    //     return files.map((file) => ({
+    //         id: file.id,
+    //         name: file.name,
+    //         webViewLink: file.webViewLink
+    //     }));
+    // };
+
+    const generateGoogleAuthURL = () => {
+        window.location.href = googleAuthURL;
+    }
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if (code) {
+            // Use the code for further processing
+            console.log("AuthCode", code);
+            setModal2(true);
+            setRefreshCode(code);
+        }
+
+    }, []);
+
+    useEffect(() => {
+        if (refreshCode.length > 0) {
+            const userEmail = user?.email ? user.email : 'test@admin.com'
+            getListFiles(userEmail, refreshCode)
+                .then(response => {
+                    // Handle successful response
+                    console.log(response.data);
+                    setRecordsData(response.data);
+                })
+                .catch(error => {
+                    // Handle error
+                    console.error('Error fetching files:', error);
+                });
+        }
+
+    }, [refreshCode])
 
     const handleSaveButtonClick = () => {
         setModal2(false)
-        console.log('Selected Records in LIST FILES:', selectedRecords);
         onSave(selectedRecords);
     };
 
-    useEffect(() => {
-        console.log('Fetching data');
-        dispatch(setPageTitle('Modals'));
-        const fetchData = async () => {
-            try {
-              const response = await fetch('http://10.0.0.84:8080/listFiles');
-              if (response.ok) {
-                const files = await response.json();
-                const convertedData = convertToFileRowData(files);
-                setRowData(convertedData);
-                setInitialRecords(sortBy(convertedData, 'name'));
-                setRecordsData(convertedData)
-              } else {
-                console.error('Failed to fetch data:', response.statusText);
-              }
-            } catch (error) {
-              console.error('Error fetching data:', error);
-            }
-          };
-          fetchData();
-    }, []);
-    
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
         columnAccessor: 'name',
         direction: 'asc',
     });
 
     useEffect(() => {
-        console.log('Page 1');
         setPage(1);
     }, [pageSize]);
 
@@ -107,7 +121,7 @@ const ListFiles = ({ onSave }) => {
     return (
         <div>
             <div className="flex items-center justify-center">
-                <button type="button" onClick={() => setModal2(true)} className="btn btn-primary">
+                <button type="button" onClick={() => generateGoogleAuthURL()} className="btn btn-primary">
                     <IconUserPlus className="ltr:mr-2 rtl:ml-2" />
                     Add Files
                 </button>

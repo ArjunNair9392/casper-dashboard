@@ -13,6 +13,8 @@ import IconShare from '@/components/Icon/IconShare';
 import IconUserPlus from '@/components/Icon/IconUserPlus';
 import IconSearch from '@/components/Icon/IconSearch';
 import ListFiles from '@/components/usable_components/ListFiles';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 interface FileData {
     id: string;
@@ -22,6 +24,8 @@ interface FileData {
 
 const Folders = () => {
     const dispatch = useDispatch();
+    const { user, error, isLoading } = useUser();
+
     useEffect(() => {
         dispatch(setPageTitle('Folders'));
     });
@@ -81,17 +85,17 @@ const Folders = () => {
         const data = sortBy(initialRecords, sortStatus.columnAccessor);
         setInitialRecords(sortStatus.direction === 'desc' ? data.reverse() : data);
     }, [sortStatus]);
-    
+
     const handleDelete = (idToDelete: string) => {
         // Filter out the item to delete from rowData
         const updatedRowData = rowData.filter(item => item.id !== idToDelete);
-    
+
         // Filter out the item to delete from initialRecords
         const updatedInitialRecords = initialRecords.filter(item => item.id !== idToDelete);
-    
+
         // Filter out the item to delete from recordsData
         const updatedRecordsData = recordsData.filter(item => item.id !== idToDelete);
-    
+
         // Update the state with the filtered arrays
         setRowData(updatedRowData);
         setInitialRecords(updatedInitialRecords);
@@ -102,27 +106,27 @@ const Folders = () => {
         <div>
             <div className="panel mt-6">
                 <div className="flex flex-wrap items-center justify-between gap-5 mb-5">
-                <h2 className="text-xl">Files</h2>
-                <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
-                    <div className="flex gap-3">
-                        <div>
-                            <ListFiles onSave={handleListFilesSave}/>
+                    <h2 className="text-xl">Files</h2>
+                    <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+                        <div className="flex gap-3">
+                            <div>
+                                <ListFiles onSave={handleListFilesSave} />
+                            </div>
+                            <div>
+                                <button type="button" className="btn btn-primary" onClick={() => { }}>
+                                    <IconShare className="ltr:mr-2 rtl:ml-2" />
+                                    Share
+                                </button>
+                            </div>
                         </div>
-                        <div>
-                            <button type="button" className="btn btn-primary" onClick={() => editUser()}>
-                                <IconShare className="ltr:mr-2 rtl:ml-2" />
-                                Share
+                        <div className="relative">
+                            <input type="text" placeholder="Search Folders" className="peer form-input py-2 ltr:pr-11 rtl:pl-11" value={search} onChange={(e) => setSearch(e.target.value)} />
+                            <button type="button" className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
+                                <IconSearch className="mx-auto" />
                             </button>
                         </div>
                     </div>
-                    <div className="relative">
-                        <input type="text" placeholder="Search Folders" className="peer form-input py-2 ltr:pr-11 rtl:pl-11" value={search} onChange={(e) => setSearch(e.target.value)} />
-                        <button type="button" className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
-                            <IconSearch className="mx-auto" />
-                        </button>
-                    </div>
                 </div>
-            </div>
                 <div className="datatables">
                     {isMounted && (
                         <DataTable
@@ -147,9 +151,9 @@ const Folders = () => {
                                     accessor: 'action',
                                     title: 'Action',
                                     titleClassName: '!text-center action-column',
-                                    render: ({id}) => (
+                                    render: ({ id }) => (
                                         <div className="mx-auto flex w-max items-center gap-2"
-                                            onClick={() => handleDelete(id)} 
+                                            onClick={() => handleDelete(id)}
                                         >
                                             <Tippy content="Delete">
                                                 <IconTrashLines />
@@ -176,4 +180,4 @@ const Folders = () => {
     );
 };
 
-export default Folders;
+export default withPageAuthRequired(Folders);

@@ -9,9 +9,11 @@ import Sidebar from './Sidebar';
 import Setting from './Setting';
 import Portals from '../../components/Portals';
 import { useRouter } from 'next/router';
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
     const router = useRouter();
+    const { user, error, isLoading } = useUser();
     const [showLoader, setShowLoader] = useState(true);
     const [showTopButton, setShowTopButton] = useState(false);
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
@@ -98,7 +100,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     )}
                 </div>
                 {/* BEGIN APP SETTING LAUNCHER */}
-                <Setting />
+                {/* <Setting /> */}
                 {/* END APP SETTING LAUNCHER */}
                 <div className={`${themeConfig.navbar} main-container min-h-screen text-black dark:text-white-dark`}>
                     {/* BEGIN SIDEBAR */}
@@ -106,7 +108,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     {/* END SIDEBAR */}
                     <div className="main-content flex flex-col min-h-screen">
                         {/* BEGIN TOP NAVBAR */}
-                        <Header />
+                        {user && <Header />}
                         {/* END TOP NAVBAR */}
 
                         {/* BEGIN CONTENT AREA */}
