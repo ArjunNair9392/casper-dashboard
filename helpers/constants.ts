@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 const oauth2Endpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
 const scope = encodeURIComponent('https://www.googleapis.com/auth/drive.readonly');
 const state = encodeURIComponent('http://localhost:8080');

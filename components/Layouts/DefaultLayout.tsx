@@ -104,7 +104,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                 {/* END APP SETTING LAUNCHER */}
                 <div className={`${themeConfig.navbar} main-container min-h-screen text-black dark:text-white-dark`}>
                     {/* BEGIN SIDEBAR */}
-                    <Sidebar />
+                    {user && <Sidebar />}
                     {/* END SIDEBAR */}
                     <div className="main-content flex flex-col min-h-screen">
                         {/* BEGIN TOP NAVBAR */}

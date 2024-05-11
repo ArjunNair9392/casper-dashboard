@@ -1,25 +1,28 @@
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
 import { stateAbbreviations } from '../../helpers/constants';
+import { registerCompany } from '@/services/registrationService';
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 const CompanyDetails = () => {
+    const { user, error, isLoading } = useUser();
+    const router = useRouter();
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle('CompanyDetails'));
     });
     const [formData, setFormData] = useState({
-        email: '',
-        password: '',
+        company: '',
         address: '',
-        address2: '',
         city: '',
         state: '',
-        zip: ''
+        phone_number: '',
+        admin_email: user?.email ? user.email : ''
     });
-    const [zipError, setZipError] = useState('');
+    const [phoneError, setPhoneError] = useState('');
     const [cityError, setCityError] = useState('');
 
     const breadcrumbTrails = [
@@ -29,11 +32,11 @@ const CompanyDetails = () => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        if (name === 'zip') {
+        if (name === 'phone_number') {
             if (/[^0-9]/.test(value)) {
-                setZipError('Zip code should only contain numbers.');
+                setPhoneError('Zip code should only contain numbers.');
             } else {
-                setZipError('');
+                setPhoneError('');
             }
         }
         if (name === 'city') {
@@ -51,23 +54,11 @@ const CompanyDetails = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         try {
-            const response = await fetch('your_registration_service_endpoint', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to register');
-            }
-
-            // Handle successful registration
+            await registerCompany(formData);
+            router.push('/usable/folders');
         } catch (error) {
-            console.error('Error registering:', error);
+            console.error('Error:', error);
         }
     };
 
@@ -77,23 +68,13 @@ const CompanyDetails = () => {
             <div className="mb-5">
                 <p className="text-xl mb-8">Register your company</p>
                 <form className="space-y-5" onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        <div>
-                            <label htmlFor="gridEmail">Email</label>
-                            <input id="gridEmail" type="email" placeholder="Enter Email" className="form-input" name="email" value={formData.email} onChange={handleChange} />
-                        </div>
-                        <div>
-                            <label htmlFor="gridPassword">Password</label>
-                            <input id="gridPassword" type="Password" placeholder="Enter Password" className="form-input" name="password" value={formData.password} onChange={handleChange} />
-                        </div>
+                    <div>
+                        <label htmlFor="gridCompany">Company Name</label>
+                        <input id="gridCompany" type="text" placeholder="Enter company name" className="form-input" name="company" value={formData.company} onChange={handleChange} />
                     </div>
                     <div>
-                        <label htmlFor="gridAddress1">Address</label>
-                        <input id="gridAddress1" type="text" placeholder="Enter Address" className="form-input" name="address" value={formData.address} onChange={handleChange} />
-                    </div>
-                    <div>
-                        <label htmlFor="gridAddress2">Address 2</label>
-                        <input id="gridAddress2" type="text" placeholder="Apartment, studio, or floor" className="form-input" name="address2" value={formData.address2} onChange={handleChange} />
+                        <label htmlFor="gridAddress2">Address</label>
+                        <input id="gridAddress2" type="text" placeholder="Enter company address" className="form-input" name="address" value={formData.address} onChange={handleChange} />
                     </div>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
                         <div className="md:col-span-2">
@@ -111,9 +92,9 @@ const CompanyDetails = () => {
                             </select>
                         </div>
                         <div>
-                            <label htmlFor="gridZip">Zip</label>
-                            <input id="gridZip" type="text" placeholder="Enter Zip" className="form-input" name="zip" value={formData.zip} onChange={handleChange} />
-                            {zipError && <p className="text-red-500 text-sm">{zipError}</p>}
+                            <label htmlFor="gridPhoneNumber">Phone Number</label>
+                            <input id="gridPhoneNumber" type="text" placeholder="Enter Phone Number" className="form-input" name="phone_number" value={formData.phone_number} onChange={handleChange} />
+                            {phoneError && <p className="text-red-500 text-sm">{phoneError}</p>}
                         </div>
                     </div>
                     <button type="submit" className="btn btn-primary !mt-6">
