@@ -16,3 +16,5 @@ jspm_packages
 logs
 *.log
 npm-debug.log*
+
+.env
