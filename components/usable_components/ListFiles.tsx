@@ -12,6 +12,7 @@ import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import sortBy from 'lodash/sortBy';
 import { getListFiles } from '../../services/listFiles';
 import { useUser } from "@auth0/nextjs-auth0/client";
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 interface FileData {
     id: string;
@@ -26,7 +27,7 @@ const PAGE_SIZES = [10, 20, 30, 50, 100];
 
 const ListFiles: React.FC<Props> = ({ onSave }) => {
     const { user } = useUser();
-    const [modal2, setModal2] = useState(false);
+    const [listFilesModal, setListFilesModal] = useState(false);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
     const [initialRecords, setInitialRecords] = useState<FileData[]>([]);
@@ -38,6 +39,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
         columnAccessor: 'name',
         direction: 'asc',
     });
+    const [confirmFileSaveModal, setConfirmFileSaveModal] = useState(false);
 
     // const convertToFileRowData = (files: any[]) => {
     //     return files.map((file) => ({
@@ -56,7 +58,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
         const code = urlParams.get('code');
         if (code) {
             // Use the code for further processing
-            setModal2(true);
+            setListFilesModal(true);
             setRefreshCode(code);
         }
 
@@ -80,9 +82,19 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
     }, [refreshCode])
 
     const handleSaveButtonClick = () => {
-        setModal2(false)
-        onSave(selectedRecords);
+        setConfirmFileSaveModal(true);
     };
+
+    const handleConfirmFilesSave = () => {
+        onSave(selectedRecords);
+        setConfirmFileSaveModal(false);
+        setListFilesModal(false);
+    };
+
+    const handleCancelShare = () => {
+        setConfirmFileSaveModal(false);
+    };
+
 
     useEffect(() => {
         setPage(1);
@@ -121,8 +133,8 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
                     Add Files
                 </button>
             </div>
-            <Transition appear show={modal2} as={Fragment}>
-                <Dialog as="div" open={modal2} onClose={() => setModal2(false)}>
+            <Transition appear show={listFilesModal} as={Fragment}>
+                <Dialog as="div" open={listFilesModal} onClose={() => setListFilesModal(false)}>
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
@@ -148,7 +160,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
                                 <Dialog.Panel as="div" className="panel my-8 w-full overflow-hidden rounded-lg border-0 p-0 text-black dark:text-white-dark">
                                     <div className="flex items-center justify-between bg-[#fbfbfb] px-5 py-3 dark:bg-[#121c2c]">
                                         <h5 className="text-lg font-bold">Select PDF files for Casper to read</h5>
-                                        <button type="button" className="text-white-dark hover:text-dark" onClick={() => setModal2(false)}>
+                                        <button type="button" className="text-white-dark hover:text-dark" onClick={() => setListFilesModal(false)}>
                                             <IconX />
                                         </button>
                                     </div>
@@ -193,7 +205,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
                                             </div>
                                         </div>
                                         <div className="mt-8 flex items-center justify-end">
-                                            <button type="button" className="btn btn-outline-danger" onClick={() => setModal2(false)}>
+                                            <button type="button" className="btn btn-outline-danger" onClick={() => setListFilesModal(false)}>
                                                 Discard
                                             </button>
                                             <button type="button" className="btn btn-primary ltr:ml-4 rtl:mr-4" onClick={handleSaveButtonClick}>
@@ -203,6 +215,13 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
                                     </div>
                                 </Dialog.Panel>
                             </Transition.Child>
+                            <ConfirmationModal
+                                isOpen={confirmFileSaveModal}
+                                title="Save Files"
+                                message="Are you sure you want to save the selected files?"
+                                onConfirm={handleConfirmFilesSave}
+                                onCancel={handleCancelShare}
+                            />
                         </div>
                     </div>
                 </Dialog>

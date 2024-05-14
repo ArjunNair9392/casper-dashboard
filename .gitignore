@@ -18,3 +18,4 @@ logs
 npm-debug.log*
 
 .env
+settings.json

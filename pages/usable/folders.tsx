@@ -14,6 +14,8 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { processFiles } from '@/services/processFiles';
 import IconCircleCheck from '@/components/Icon/IconCircleCheck';
+import IconX from '@/components/Icon/IconX';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 interface FileData {
     id: string;
@@ -45,6 +47,7 @@ const Folders = () => {
     const [emails, setEmails] = useState<string[]>([]);
     const [currentEmail, setCurrentEmail] = useState<string>('');
     const [search, setSearch] = useState('');
+    const [confirmShare, setConfirmShare] = useState(false);
 
     useEffect(() => {
         setPage(1);
@@ -103,9 +106,19 @@ const Folders = () => {
 
     const handleShare = () => {
         const emailList = emails.map(email => email.trim()).join(',');
-        // Call API to share emailList
         console.log('Sharing emails:', emailList);
+        setConfirmShare(true);
+    };
+
+    const handleConfirmShare = () => {
+        // Call API to share and close modal
+        console.log('Sharing...');
+        setConfirmShare(false);
         setShareModal(false);
+    };
+
+    const handleCancelShare = () => {
+        setConfirmShare(false);
     };
 
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
@@ -114,7 +127,6 @@ const Folders = () => {
     });
 
     useEffect(() => {
-        console.log('Sort');
         const data = sortBy(initialRecords, sortStatus.columnAccessor);
         setInitialRecords(sortStatus.direction === 'desc' ? data.reverse() : data);
     }, [sortStatus]);
@@ -190,15 +202,20 @@ const Folders = () => {
                                             leaveTo="opacity-0 scale-95"
                                         >
                                             <Dialog.Panel as="div" className="panel my-8 w-full max-w-xl overflow-hidden rounded-lg border-0 p-0 text-black dark:text-white-dark">
-                                                <div className="flex flex-col bg-[#fbfbfb] dark:bg-[#121c2c]">
-                                                    <h5 className="text-lg font-bold mb-2 bg-blue-500 text-white p-2">Share file access</h5>
+                                                <div className="flex items-center justify-between bg-[#fbfbfb] px-5 py-3 dark:bg-[#121c2c]">
+                                                    <h5 className="text-lg font-bold">Share file access</h5>
+                                                    <button type="button" className="text-white-dark hover:text-dark" onClick={() => setShareModal(false)}>
+                                                        <IconX />
+                                                    </button>
+                                                </div>
+                                                <div className='mb-2 p-4'>
                                                     <input
                                                         id="emailInput"
                                                         type="text"
                                                         value={currentEmail}
                                                         onChange={handleEmailsChange}
-                                                        onKeyDown={handleKeyDown} // Add keydown event handler
-                                                        className="p-2 mb-2 mr-2 ml-2 border border-gray-300 rounded"
+                                                        onKeyDown={handleKeyDown}
+                                                        className="p-2 mb-2 mr-2 ml-2 border border-gray-300 rounded max-w-lg"
                                                     />
                                                     <label htmlFor="emailInput" className="italic mb-2 p-2">Enter Email Addresses (comma-separated):</label>
                                                     <div className="flex flex-wrap">
@@ -207,7 +224,10 @@ const Folders = () => {
                                                         ))}
                                                     </div>
                                                     <div className="flex justify-end">
-                                                        <button type="button" className="bg-blue-500 text-white p-2 inline-block hover:bg-blue-600 mr-4 mb-2" onClick={handleShare}>
+                                                        <button type="button" className="btn btn-outline-danger" onClick={() => setShareModal(false)}>
+                                                            Cancel
+                                                        </button>
+                                                        <button type="button" className="btn btn-primary ltr:ml-4 rtl:mr-4" onClick={handleShare}>
                                                             Save
                                                         </button>
                                                     </div>
@@ -218,6 +238,13 @@ const Folders = () => {
                                 </div>
                             </Dialog>
                         </Transition>
+                        <ConfirmationModal
+                            isOpen={confirmShare}
+                            title="Share File Access"
+                            message="Are you sure you want to share file access?"
+                            onConfirm={handleConfirmShare}
+                            onCancel={handleCancelShare}
+                        />
                         <div className="relative">
                             <input type="text" placeholder="Search Folders" className="peer form-input py-2 ltr:pr-11 rtl:pl-11" value={search} onChange={(e) => setSearch(e.target.value)} />
                             <button type="button" className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
@@ -288,7 +315,7 @@ const Folders = () => {
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 
