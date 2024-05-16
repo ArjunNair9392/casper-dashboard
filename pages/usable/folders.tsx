@@ -14,8 +14,7 @@ import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { processFiles } from '@/services/processFiles';
 import IconCircleCheck from '@/components/Icon/IconCircleCheck';
-import IconX from '@/components/Icon/IconX';
-import ConfirmationModal from '@/components/ConfirmationModal';
+import ShareUsers from '@/components/ShareUsers/ShareUsers';
 
 interface FileData {
     id: string;
@@ -26,7 +25,7 @@ interface FileData {
 
 const Folders = () => {
     const dispatch = useDispatch();
-    const { user, error, isLoading } = useUser();
+    const { user } = useUser();
 
     useEffect(() => {
         dispatch(setPageTitle('Folders'));
@@ -44,10 +43,7 @@ const Folders = () => {
     const [initialRecords, setInitialRecords] = useState<FileData[]>([]);
     const [recordsData, setRecordsData] = useState<FileData[]>([]);
     const [shareModal, setShareModal] = useState(false);
-    const [emails, setEmails] = useState<string[]>([]);
-    const [currentEmail, setCurrentEmail] = useState<string>('');
     const [search, setSearch] = useState('');
-    const [confirmShare, setConfirmShare] = useState(false);
 
     useEffect(() => {
         setPage(1);
@@ -60,7 +56,6 @@ const Folders = () => {
     }, [page, pageSize, initialRecords]);
 
     useEffect(() => {
-        console.log('Search Call', search);
         setInitialRecords(() => {
             return rowData.filter((item) => {
                 const itemName = item.name.toLowerCase().trim();
@@ -73,52 +68,12 @@ const Folders = () => {
     }, [search]);
 
     const handleListFilesSave = (selectedRecords: any) => {
-        console.log('Selected Records in Folders:', selectedRecords);
+        //console.log('Selected Records in Folders:', selectedRecords);
         setRowData(selectedRecords)
         setInitialRecords(sortBy(selectedRecords, 'name'));
         setRecordsData(selectedRecords);
         const fileIds = selectedRecords.map((record: { id: any; }) => record.id);
         processFiles(fileIds, 'Amazon', user?.email ? user.email : '');
-    };
-
-    const handleEmailsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setCurrentEmail(e.target.value);
-    };
-
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && isValidEmail(currentEmail)) {
-            // Add currentEmail to the list of emails
-            setEmails(prevEmails => [...prevEmails, currentEmail]);
-            // Clear the currentEmail input
-            setCurrentEmail('');
-        }
-    };
-
-    const removeEmail = (index: number) => {
-        setEmails(prevEmails => prevEmails.filter((_, i) => i !== index));
-    };
-
-    const isValidEmail = (email: string) => {
-        // Regular expression for validating email format
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailPattern.test(email);
-    };
-
-    const handleShare = () => {
-        const emailList = emails.map(email => email.trim()).join(',');
-        console.log('Sharing emails:', emailList);
-        setConfirmShare(true);
-    };
-
-    const handleConfirmShare = () => {
-        // Call API to share and close modal
-        console.log('Sharing...');
-        setConfirmShare(false);
-        setShareModal(false);
-    };
-
-    const handleCancelShare = () => {
-        setConfirmShare(false);
     };
 
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
@@ -145,19 +100,6 @@ const Folders = () => {
         setRowData(updatedRowData);
         setInitialRecords(updatedInitialRecords);
         setRecordsData(updatedRecordsData);
-    };
-
-    const EmailPill = ({ email, onDelete }: { email: string, onDelete: () => void }) => {
-        return (
-            <div className="inline-flex items-center bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">
-                <span>{email}</span>
-                <button onClick={onDelete} className="ml-1 focus:outline-none">
-                    <svg className="w-4 h-4 fill-current text-gray-600" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" d="M11.414 10l3.293-3.293a1 1 0 1 0-1.414-1.414L10 8.586 6.707 5.293a1 1 0 1 0-1.414 1.414L8.586 10l-3.293 3.293a1 1 0 1 0 1.414 1.414L10 11.414l3.293 3.293a1 1 0 1 0 1.414-1.414L11.414 10z" clipRule="evenodd" />
-                    </svg>
-                </button>
-            </div>
-        );
     };
 
     return (
@@ -202,49 +144,13 @@ const Folders = () => {
                                             leaveTo="opacity-0 scale-95"
                                         >
                                             <Dialog.Panel as="div" className="panel my-8 w-full max-w-xl overflow-hidden rounded-lg border-0 p-0 text-black dark:text-white-dark">
-                                                <div className="flex items-center justify-between bg-[#fbfbfb] px-5 py-3 dark:bg-[#121c2c]">
-                                                    <h5 className="text-lg font-bold">Share file access</h5>
-                                                    <button type="button" className="text-white-dark hover:text-dark" onClick={() => setShareModal(false)}>
-                                                        <IconX />
-                                                    </button>
-                                                </div>
-                                                <div className='mb-2 p-4'>
-                                                    <input
-                                                        id="emailInput"
-                                                        type="text"
-                                                        value={currentEmail}
-                                                        onChange={handleEmailsChange}
-                                                        onKeyDown={handleKeyDown}
-                                                        className="p-2 mb-2 mr-2 ml-2 border border-gray-300 rounded max-w-lg"
-                                                    />
-                                                    <label htmlFor="emailInput" className="italic mb-2 p-2">Enter Email Addresses (comma-separated):</label>
-                                                    <div className="flex flex-wrap">
-                                                        {emails.map((email, index) => (
-                                                            <EmailPill key={index} email={email} onDelete={() => removeEmail(index)} />
-                                                        ))}
-                                                    </div>
-                                                    <div className="flex justify-end">
-                                                        <button type="button" className="btn btn-outline-danger" onClick={() => setShareModal(false)}>
-                                                            Cancel
-                                                        </button>
-                                                        <button type="button" className="btn btn-primary ltr:ml-4 rtl:mr-4" onClick={handleShare}>
-                                                            Save
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                                <ShareUsers setShareModal={setShareModal} />
                                             </Dialog.Panel>
                                         </Transition.Child>
                                     </div>
                                 </div>
                             </Dialog>
                         </Transition>
-                        <ConfirmationModal
-                            isOpen={confirmShare}
-                            title="Share File Access"
-                            message="Are you sure you want to share file access?"
-                            onConfirm={handleConfirmShare}
-                            onCancel={handleCancelShare}
-                        />
                         <div className="relative">
                             <input type="text" placeholder="Search Folders" className="peer form-input py-2 ltr:pr-11 rtl:pl-11" value={search} onChange={(e) => setSearch(e.target.value)} />
                             <button type="button" className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">

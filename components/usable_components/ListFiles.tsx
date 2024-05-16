@@ -1,6 +1,5 @@
 import { useEffect, useState, Fragment } from 'react';
 import 'tippy.js/dist/tippy.css';
-import { useDebouncedValue } from '@mantine/hooks';
 import IconUserPlus from '@/components/Icon/IconUserPlus';
 import { Dialog, Transition } from '@headlessui/react';
 import { googleAuthURL } from '../../helpers/constants';
@@ -13,6 +12,7 @@ import sortBy from 'lodash/sortBy';
 import { getListFiles } from '../../services/listFiles';
 import { useUser } from "@auth0/nextjs-auth0/client";
 import ConfirmationModal from '@/components/ConfirmationModal';
+import { useRouter } from 'next/router';
 
 interface FileData {
     id: string;
@@ -26,6 +26,7 @@ interface Props {
 const PAGE_SIZES = [10, 20, 30, 50, 100];
 
 const ListFiles: React.FC<Props> = ({ onSave }) => {
+    const router = useRouter();
     const { user } = useUser();
     const [listFilesModal, setListFilesModal] = useState(false);
     const [page, setPage] = useState(1);
@@ -34,52 +35,48 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
     const [recordsData, setRecordsData] = useState<FileData[]>(sortBy([...initialRecords.slice(0, pageSize)], 'name'));
     const [search, setSearch] = useState('');
     const [selectedRecords, setSelectedRecords] = useState<any>([]);
-    const [refreshCode, setRefreshCode] = useState('');
+    const [refreshCode, setRefreshCode] = useState(localStorage.getItem('code'));
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
         columnAccessor: 'name',
         direction: 'asc',
     });
     const [confirmFileSaveModal, setConfirmFileSaveModal] = useState(false);
 
-    // const convertToFileRowData = (files: any[]) => {
-    //     return files.map((file) => ({
-    //         id: file.id,
-    //         name: file.name,
-    //         webViewLink: file.webViewLink
-    //     }));
-    // };
-
     const generateGoogleAuthURL = () => {
-        window.location.href = googleAuthURL;
+        if (refreshCode && refreshCode.length > 0) {
+            getFiles(refreshCode);
+        } else {
+            window.location.href = googleAuthURL;
+        }
     }
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         if (code) {
-            // Use the code for further processing
-            setListFilesModal(true);
-            setRefreshCode(code);
+            localStorage.setItem('code', code);
+            router.push('/usable/folders');
         }
-
     }, []);
 
     useEffect(() => {
-        if (refreshCode.length > 0) {
-            const userEmail = user?.email ? user.email : 'test@admin.com'
-            getListFiles(userEmail, refreshCode)
-                .then(response => {
-                    // Handle successful response
-                    console.log(response.data);
-                    setInitialRecords(response.data);
-                })
-                .catch(error => {
-                    // Handle error
-                    console.error('Error fetching files:', error);
-                });
+        if (initialRecords.length) {
+            setListFilesModal(true);
         }
+    }, [initialRecords]);
 
-    }, [refreshCode])
+    const getFiles = (code: string) => {
+        const userEmail = user?.email ? user.email : 'test@admin.com'
+        getListFiles(userEmail, code)
+            .then(response => {
+                // Handle successful response
+                setInitialRecords(response.data);
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error fetching files:', error);
+            });
+    }
 
     const handleSaveButtonClick = () => {
         setConfirmFileSaveModal(true);
@@ -94,7 +91,6 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
     const handleCancelShare = () => {
         setConfirmFileSaveModal(false);
     };
-
 
     useEffect(() => {
         setPage(1);
@@ -115,12 +111,10 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
             }
             return true;
         })
-        console.log({ filteredRecords });
         setRecordsData(filteredRecords.slice(from, to));
     }, [search]);
 
     useEffect(() => {
-        console.log('Sort');
         const data = sortBy(initialRecords, sortStatus.columnAccessor);
         setInitialRecords(sortStatus.direction === 'desc' ? data.reverse() : data);
     }, [sortStatus]);
