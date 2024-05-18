@@ -1,0 +1,36 @@
+
+.container {
+    text-align: center;
+}
+
+.googleButton {
+    background-color: #fff;
+    color: #444;
+    border: 1px solid #ddd;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s, border-color 0.3s;
+    margin-bottom: 5px;
+}
+
+.googleButton:hover {
+    background-color: #f1f1f1;
+    border-color: #bbb;
+}
+
+.googleIcon {
+    margin-right: 10px;
+}
+
+.statusMessage {
+    margin-top: 5px;
+    font-size: 16px;
+}
+
+.statusMessage.connected {
+    color: green;
+}

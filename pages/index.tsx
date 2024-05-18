@@ -3,6 +3,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import HomeScreen from "@/components/HomeScreen/HomeScreen";
 
 function index() {
     const { user, error, isLoading } = useUser();
@@ -26,11 +27,10 @@ function index() {
         return (
             <div className="flex flex-col items-center justify-center h-screen">
                 <>
-                    <h1 className="text-3xl font-bold mb-4">Welcome, {user.name}!</h1>
-                    <p className="text-lg mb-8">You have successfully logged in.</p>
+                    <HomeScreen />
                 </>
                 {!isAdminRegistered && (
-                    <div className="bg-alert px-4 py-3 rounded relative mb-4" role="alert">
+                    <div className="bg-alert px-4 py-3 rounded relative mb-4 mt-4" role="alert">
                         <span className="mr-2"><FontAwesomeIcon icon={faInfoCircle} /></span>
                         <strong className="font-bold">Info:</strong>
                         <span className="block sm:inline">It seems that you are not registered as an admin. Please register <button onClick={handleRegisterClick} className="text-blue-500">here</button>.</span>

@@ -1,0 +1,207 @@
+/* // :root {
+//     --app-container: #f3f6fd;
+//     --main-color: #1f1c2e;
+//     --secondary-color: #4A4A4A;
+//     --link-color: #1f1c2e;
+//     --link-color-hover: #c3cff4;
+//     --link-color-active: #fff;
+//     --link-color-active-bg: #1f1c2e;
+//     --projects-section: #fff;
+//     --message-box-hover: #fafcff;
+//     --message-box-border: #e9ebf0;
+//     --more-list-bg: #fff;
+//     --more-list-bg-hover: #f6fbff;
+//     --more-list-shadow: rgba(209, 209, 209, 0.4);
+//       main-color-card: #dbf6fd;
+//     --button-bg: #1f1c24;
+//     --search-area-bg: #fff;
+//     --star: #1ff1c2e;
+//     --message-btn: #fff;
+// } */
+
+.homeScreenContainer {
+    flex: 2;
+    background-color: #fff;
+    border-radius: 32px;
+    padding: 32px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    color: #1f1c2e;
+}
+
+.header p {
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 700;
+    opacity: .9;
+    margin: 0;
+    color: #1f1c2e;
+}
+
+.time {
+    font-size: 20px !important;
+}
+
+.filesSectionLine {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 32px;
+}
+
+.fileStatus {
+    display: flex;
+}
+
+.itemStatus {
+    display: flex;
+    flex-direction: column;
+    margin-right: 16px;
+}
+
+.itemStatus:not(:last-child) .status-type:after {
+    content: '';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    border: 1px solid var(--secondary-color);
+}
+
+.statusNumber {
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 700;
+    color: #1f1c2e;
+}
+
+.statusType {
+    position: relative;
+    padding-right: 24px;
+    color: #4A4A4A;
+}
+
+.projectBoxes {
+    margin: 0 -8px;
+    overflow-y: auto;
+}
+
+.jsGridView {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.projectBoxWrapper {
+    width: 33.3%;
+}
+
+.projectBoxes.jsListView .projectBox {
+    display: flex;
+    border-radius: 10px;
+}
+
+.projectBoxes.jsListView .moreWrapper {
+    right: 16px;
+    top: 16px;
+}
+
+.projectBoxes.jsListView .projectBoxContentHeader {
+    order: 1;
+    max-width: 120px;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 700;
+    opacity: 0.7;
+}
+
+.projectBoxes.jsListView .projectBoxSubContentHeader {
+    font-size: 14px;
+    line-height: 24px;
+    opacity: 0.7;
+}
+
+.projectBoxes.jsListView .projectBoxHeader {
+    order: 2;
+}
+
+.projectBoxes.jsListView .projectBoxFooter {
+    order: 3;
+    padding-top: 0;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.projectBoxes.jsListView .projectBoxFooter:after {
+    display: none;
+}
+
+.projectBoxes.jsListView .participants {
+    margin-bottom: 8px;
+}
+
+.projectBoxes.jsListView .projectBoxContentHeader p {
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.projectBoxes.jsListView .projectBoxHeader>span {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    font-size: 12px;
+}
+
+.projectBoxes.jsListView .boxProgressWrapper {
+    order: 3;
+    flex: 1;
+}
+
+.projectBox {
+    /* --main-color-card: #dbf6fd; */
+    border-radius: 30px;
+    padding: 16px;
+    background-color: #dbf6fd;
+}
+
+.projectBoxHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    color: var(--main-color);
+}
+
+.projectBoxHeader span {
+    color: #4A4A4A;
+    opacity: .7;
+    font-size: 14px;
+    line-height: 16px;
+}
+
+.projectBoxContentHeader {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.projectBoxContentHeader p {
+    margin: 0;
+}
+
+.projectBoxWrapper {
+    padding: 8px;
+    transition: .2s;
+}

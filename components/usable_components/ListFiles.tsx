@@ -43,6 +43,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
     const [confirmFileSaveModal, setConfirmFileSaveModal] = useState(false);
 
     const generateGoogleAuthURL = () => {
+        setListFilesModal(true);
         if (refreshCode && refreshCode.length > 0) {
             getFiles(refreshCode);
         } else {
@@ -56,6 +57,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
         if (code) {
             localStorage.setItem('code', code);
             router.push('/usable/folders');
+            getFiles(code);
         }
     }, []);
 
