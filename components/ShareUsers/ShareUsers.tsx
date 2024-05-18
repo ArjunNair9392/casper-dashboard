@@ -38,7 +38,11 @@ const ShareUsers: React.FC<ShareUsersProps> = ({ setShareModal }) => {
     };
 
     const handleShare = () => {
-        setConfirmShare(true);
+        if (emails.length == 0) {
+            alert('Add emails to share');
+        } else {
+            setConfirmShare(true);
+        }
     };
 
     const handleConfirmShare = () => {
@@ -94,7 +98,7 @@ const ShareUsers: React.FC<ShareUsersProps> = ({ setShareModal }) => {
                 </ul>
             </div>
             <div className="flex justify-end">
-                <button type="button" className="btn btn-outline-danger" onClick={() => handleCancelShare()}>
+                <button type="button" className="btn btn-outline-danger" onClick={() => setShareModal(false)}>
                     Cancel
                 </button>
                 <button type="button" className="btn btn-primary ltr:ml-4 rtl:mr-4" onClick={() => handleShare()}>
