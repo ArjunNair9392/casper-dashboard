@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import HomeScreen from "@/components/HomeScreen/HomeScreen";
+import MultiStepLogin from "@/components/MultistepLogin/MultistepLogin";
 
 function index() {
     const { user, error, isLoading } = useUser();
@@ -47,19 +48,20 @@ function index() {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen">
-            <h1 className="text-3xl font-bold mb-4">Welcome to CasperAI!</h1>
-            <p className="text-lg mb-8 text-center">
-                A tool for professionals to simplify their workflow by summarizing articles, creating content, and sharing insights with stakeholders.
-                <br /><br />
-                We are the ChatGPT in your browser to quickly and easily get the gist of any web page or PDF, without having to read the whole thing.
-                <br /><br />
-                Unlock the power of AI with Casper's Dashboard. This dashboard streamlines your workflow with insights and summaries, utilizing OpenAI's GPT's newest models.
-                <br /><br />
-                Whether you're preparing for an exam, conducting due diligence on an investment, working on a major deal, or trying to stay on top of new legislation, this tool will make your job easier.
-            </p>
-            <a href="/api/auth/login" className="bg-blue-500 text-white font-bold py-4 px-8 rounded hover:bg-blue-700">Try now</a>
-        </div>
+        // <div className="flex flex-col items-center justify-center h-screen">
+        //     <h1 className="text-3xl font-bold mb-4">Welcome to CasperAI!</h1>
+        //     <p className="text-lg mb-8 text-center">
+        //         A tool for professionals to simplify their workflow by summarizing articles, creating content, and sharing insights with stakeholders.
+        //         <br /><br />
+        //         We are the ChatGPT in your browser to quickly and easily get the gist of any web page or PDF, without having to read the whole thing.
+        //         <br /><br />
+        //         Unlock the power of AI with Casper's Dashboard. This dashboard streamlines your workflow with insights and summaries, utilizing OpenAI's GPT's newest models.
+        //         <br /><br />
+        //         Whether you're preparing for an exam, conducting due diligence on an investment, working on a major deal, or trying to stay on top of new legislation, this tool will make your job easier.
+        //     </p>
+        //     <a href="/api/auth/login" className="bg-blue-500 text-white font-bold py-4 px-8 rounded hover:bg-blue-700">Try now</a>
+        // </div>
+        <MultiStepLogin />
     )
 };
 

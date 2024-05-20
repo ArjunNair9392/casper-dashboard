@@ -106,7 +106,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     {/* BEGIN SIDEBAR */}
                     {user && <Sidebar />}
                     {/* END SIDEBAR */}
-                    <div className="main-content flex flex-col min-h-screen">
+                    <div className={user ? "main-content flex flex-col min-h-screen" : ""}>
                         {/* BEGIN TOP NAVBAR */}
                         {user && <Header />}
                         {/* END TOP NAVBAR */}
