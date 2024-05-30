@@ -1,4 +1,4 @@
-import styles from './Homescreen2.module.scss';
+// import styles from './Homescreen2.module.scss';
 import { useUser } from "@auth0/nextjs-auth0/client";
 import GoogleConnect from '../SocialMediaConnectors/GoogleConnect/GoogleConnect';
 import OneDriveConnect from '../SocialMediaConnectors/OneDriveConnect/OneDriveConnect';
@@ -21,13 +21,13 @@ const HomeScreen = () => {
     const companyName = 'Amazon'; //REPLACE WITH COMPANY FROM API
 
     return (
-        <div className={styles.homeScreenContainer}>
-            {/* <div className={styles.header}>
+        <div className={"styles.homeScreenContainer"}>
+            {/* <div className={"styles.header"}>
                 <p>{user ? user.name : 'CasperAI'} | {companyName} </p>
-                <p className={styles.time}>{formatDate(new Date())}</p>
+                < className={"styles.time}>{formatDate(new Date())}</"p>
             </div> */}
-            <div className={styles.dashboardContainer}>
-                <div className={`${styles.projectBoxes} ${styles.jsGridView}`}>
+            <div className={"styles.dashboardContainer"}>
+                <div className={"`${styles.projectBoxes} ${styles.jsGridView}`"}>
                     {/* First row */}
                     <Card>
                         <div className="py-7 px-6">
@@ -38,7 +38,7 @@ const HomeScreen = () => {
                             <p className="text-white-dark">Mauris nisi felis, placerat in volutpat id, varius et sapien.</p>
                         </div>
                     </Card>
-                    <Card style={{ backgroundColor: "#ffd3e2" }}>
+                    <Card >
                         <iframe
                             src='https://www.youtube.com/embed/2IK3DFHRFfw?si=QD_gNv17rOdl5pyH'
                             allow='autoplay; encrypted-media'
@@ -47,16 +47,16 @@ const HomeScreen = () => {
                             width="100%"
                         />
                     </Card>
-                    <Card style={{ backgroundColor: '#e9e7fd' }}>
-                        <p><button className={styles.chatButton}>Chat with Casper</button></p>
+                    <Card>
+                        <p><button className={"styles.chatButton"}>Chat with Casper</button></p>
                     </Card>
-                    
+
                 </div>
-                <div className={`${styles.projectBoxes} ${styles.jsGridView} ${styles.socialMediaContainer}`}>
-                    <Card style={{ backgroundColor: '#c8f7dc' }}>
-                        <div className={styles.projectBoxHeader}>
-                            <div className={styles.boxContentHeader}>Connect your accounts</div>
-                            <div className={`${styles.boxContentSubheader} ${styles.loginIcons}`}>
+                <div className={"`${styles.projectBoxes} ${styles.jsGridView} ${styles.socialMediaContainer}`"}>
+                    <Card >
+                        <div className={"styles.projectBoxHeader"}>
+                            <div className={"styles.boxContentHeader"}>Connect your accounts</div>
+                            <div className={"`${styles.boxContentSubheader} ${styles.loginIcons}`"}>
                                 <GoogleConnect />
                                 <OneDriveConnect />
                                 <SharePointConnect />
@@ -64,9 +64,9 @@ const HomeScreen = () => {
                         </div>
                     </Card>
                     {/* <Card>
-                        <div className={styles.projectBoxHeader}>
-                            <p className={styles.boxContentHeader}>Getting started</p>
-                            <p className={styles.boxContentSubheader}>
+                        <div className={"styles.projectBoxHeader"}>
+                            < className={"styles.boxContentHeader}>Getting started</"p>
+                            <p className={"styles.boxContentSubheader"}>
                                 <strong>Step 1: Connect Your Account</strong><br></br>
                                 1. Click on the "Connect Your Account" Button: Look for the button labeled "Connect Your Account" and click on it.<br></br>
                                 2. Follow the Authentication Steps: You will be redirected to a Google authentication page where you'll need to log in to your Google account if you're not already logged in.<br></br>
@@ -91,29 +91,29 @@ const HomeScreen = () => {
                         </div>
                     </Card> */}
                 </div>
-                <div className={`${styles.projectBoxes} ${styles.jsGridView} ${styles.blogContainer}`}>
-                    <Card style={{ backgroundColor: '#d5deff' }}>
-                        <div className={styles.projectBoxHeader}>
-                            <p className={styles.boxContentHeader}>Blog</p>
-                            <p className={styles.boxContentSubheader}>The future of generative AI is both exciting and uncertain. As the technology advances, it will continue to transform how we create and interact with digital content. Collaboration between AI and human creativity is likely to become more seamless, opening up new avenues for innovation and expression.
+                <div className={"`${styles.projectBoxes} ${styles.jsGridView} ${styles.blogContainer}`"}>
+                    <Card >
+                        <div className={"styles.projectBoxHeader"}>
+                            <p className={"styles.boxContentHeader"}>Blog</p>
+                            <p className={"styles.boxContentSubheader"}>The future of generative AI is both exciting and uncertain. As the technology advances, it will continue to transform how we create and interact with digital content. Collaboration between AI and human creativity is likely to become more seamless, opening up new avenues for innovation and expression.
 
                                 To harness the full potential of generative AI, it is essential to navigate the ethical and societal implications carefully. By doing so, we can ensure that this powerful technology contributes positively to our world, fostering creativity, innovation, and progress across various fields.</p>
                         </div>
                     </Card>
-                    <Card style={{ backgroundColor: '#d5deff' }}>
-                        <div className={styles.projectBoxHeader}>
-                            <div className={styles.boxContentHeader}>Blog</div>
-                            <div className={styles.boxContentSubheader}>
+                    <Card >
+                        <div className={"styles.projectBoxHeader"}>
+                            <div className={"styles.boxContentHeader"}>Blog</div>
+                            <div className={"styles.boxContentSubheader"}>
                                 <p className="font-semibold mb-2">What is Generative AI?</p>
                                 At its core, generative AI uses complex algorithms and models, such as Generative Adversarial Networks (GANs) and Variational Autoencoders (VAEs), to create new data. These models are trained on vast datasets and learn to understand and replicate the patterns within the data. Once trained, they can generate new, unique pieces of content that follow the learned patterns.</div>
                         </div>
                     </Card>
                 </div>
-                <div className={`${styles.projectBoxes} ${styles.jsGridView} ${styles.blogContainer}`}>
-                    <Card style={{ backgroundColor: '#ffffba' }}>
-                        <div className={styles.projectBoxHeader}>
-                            <div className={styles.boxContentHeader}>Frequently asked questions</div>
-                            <div className={styles.boxContentSubheader}>
+                <div className={"`${styles.projectBoxes} ${styles.jsGridView} ${styles.blogContainer}`"}>
+                    <Card >
+                        <div className={"styles.projectBoxHeader"}>
+                            <div className={"styles.boxContentHeader"}>Frequently asked questions</div>
+                            <div className={"styles.boxContentSubheader"}>
                                 <p className="font-semibold mb-2">1. What is document parsing using AI?</p>
                                 <p>Document parsing using AI refers to the process of automatically extracting and analyzing information from documents such as text files, PDFs, or images using artificial intelligence algorithms.</p>
                                 <p className="font-semibold mt-4 mb-2">2. What are the benefits of using AI for document parsing?</p>

@@ -173,7 +173,7 @@ $mainColorCard: #dbf6fd;
     --mainColorCard: #dbf6fd;
     border-radius: 30px;
     padding: 16px;
-    background-color: $mainColorCard;
+    // background-color: $mainColorCard;
     min-height: 250px;
 
     &-header {
@@ -205,12 +205,14 @@ $mainColorCard: #dbf6fd;
         transition: .2s;
     }
 }
+
 .chatButtonContainer {
-display: flex;
-justify-content: center;
-align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     .chatButton {
-        background-color:  #6558f5;
+        background-color: #6558f5;
         color: #fff;
         border: none;
         padding: 15px 30px;

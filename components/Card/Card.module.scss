@@ -3,17 +3,21 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    max-width: 19rem; /* Adjust if necessary or remove to let flexbox handle it */
-    border-radius: 10px; /* Less rounded */
+    max-width: 19rem;
+    /* Adjust if necessary or remove to let flexbox handle it */
+    border-radius: 10px;
+    /* Less rounded */
     padding: 16px;
     background-color: #dbf6fd; // Default background color, can be overridden with inline styles
-    border: 1px solid #bfc9d4; /* Thicker border */
+    border: 1px solid #bfc9d4;
+    /* Thicker border */
     box-shadow: 4px 6px 10px -3px #bfc9d4;
     margin: 8px;
     transition: 0.2s;
 
     .dark & {
-        border: 1px solid #1b2e4b; /* Thicker border in dark mode */
+        border: 1px solid #1b2e4b;
+        /* Thicker border in dark mode */
         background-color: #191e3a;
         box-shadow: none;
     }

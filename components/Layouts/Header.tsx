@@ -186,7 +186,7 @@ const Header = () => {
                     <div className="flex items-center space-x-1.5 ltr:ml-auto rtl:mr-auto rtl:space-x-reverse dark:text-[#d0d2d6] sm:flex-1 ltr:sm:ml-0 sm:rtl:mr-0 lg:space-x-2">
                         <div className="sm:ltr:mr-auto sm:rtl:ml-auto">
                         </div>
-                        <div>
+                        {/* <div>
                             {themeConfig.theme === 'light' ? (
                                 <button
                                     className={`${themeConfig.theme === 'light' &&
@@ -219,7 +219,7 @@ const Header = () => {
                                     <IconLaptop />
                                 </button>
                             )}
-                        </div>
+                        </div> */}
                         <div className="dropdown flex shrink-0">
                             <Dropdown
                                 offset={[0, 8]}
