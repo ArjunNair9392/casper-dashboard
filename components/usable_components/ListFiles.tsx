@@ -12,6 +12,7 @@ import sortBy from 'lodash/sortBy';
 import { getListFiles } from '../../services/listFiles';
 import { useUser } from "@auth0/nextjs-auth0/client";
 import ConfirmationModal from '@/components/ConfirmationModal';
+import Swal from 'sweetalert2';
 import { useRouter } from 'next/router';
 
 interface FileData {
@@ -24,6 +25,16 @@ interface Props {
     onSave: ([]) => void;
 }
 const PAGE_SIZES = [10, 20, 30, 50, 100];
+
+const showAlert = async () => {
+    Swal.fire({
+        icon: 'success',
+        title: 'Update successful!',
+        text: 'You have shared successfully!',
+        padding: '2em',
+        customClass: 'sweet-alerts',
+    });
+};
 
 const ListFiles: React.FC<Props> = ({ onSave }) => {
     const router = useRouter();
@@ -85,6 +96,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
     };
 
     const handleConfirmFilesSave = () => {
+        showAlert();
         onSave(selectedRecords);
         setConfirmFileSaveModal(false);
         setListFilesModal(false);

@@ -2,6 +2,17 @@ import React, { useEffect, useState } from 'react';
 import styles from './GoogleConnect.module.css';
 import { getGoogleRefreshCode } from '@/helpers/signInWithGoogle';
 import IconGoogle from '@/components/Icon/IconGoogle';
+import Swal from 'sweetalert2';
+
+const showAlert = async () => {
+    Swal.fire({
+        icon: 'success',
+        title: 'Account linked!',
+        text: 'You linked the Google account!',
+        padding: '2em',
+        customClass: 'sweet-alerts',
+    });
+};
 
 const GoogleConnect: React.FC = () => {
     const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -17,12 +28,13 @@ const GoogleConnect: React.FC = () => {
         } else {
             getGoogleRefreshCode();
             setIsConnected(true);
+            showAlert();
         }
     };
 
     return (
-        <div>
-            <button type="button" className="btn btn-outline-primary" onClick={connectGoogleAccount}>
+        <div className="mb-5">
+            <button type="button" className="btn btn-secondary" onClick={connectGoogleAccount}>
                 <IconGoogle />
                 {isConnected ? 'Connected' : 'Connect with Google'}
             </button>
