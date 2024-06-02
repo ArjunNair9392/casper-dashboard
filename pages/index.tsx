@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import HomeScreen from "@/components/HomeScreen/HomeScreen";
 import MultiStepLogin from "@/components/MultistepLogin/MultistepLogin";
+import Registration from "@/components/Registration/Registration";
+import Dashboard from "@/components/Dashboard/Dashboard";
 
 function index() {
     const { user, error, isLoading } = useUser();
@@ -26,9 +28,10 @@ function index() {
 
     if (user) {
         return (
-            <div className="flex flex-col items-center justify-center h-screen">
+            <div className="flex flex-col items-center justify-center">
                 <>
-                    <HomeScreen />
+                    {/* <HomeScreen /> */}
+                    <Dashboard />
                 </>
                 {!isAdminRegistered && (
                     <div className="bg-alert px-4 py-3 rounded relative mb-4 mt-4" role="alert">
@@ -61,7 +64,8 @@ function index() {
         //     </p>
         //     <a href="/api/auth/login" className="bg-blue-500 text-white font-bold py-4 px-8 rounded hover:bg-blue-700">Try now</a>
         // </div>
-        <MultiStepLogin />
+        // <MultiStepLogin />
+        <Registration />
     )
 };
 
