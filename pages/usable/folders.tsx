@@ -13,11 +13,16 @@ import ListFiles from '@/components/usable_components/ListFiles';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { processFiles } from '@/services/processFiles';
+import { deleteFile } from '@/services/deleteFile';
 import IconCircleCheck from '@/components/Icon/IconCircleCheck';
 import ShareUsers from '@/components/ShareUsers/ShareUsers';
+import { getSelectedFiles } from '../../services/selectedFiles';
 
 interface FileData {
     id: string;
+    docId: string;
+    docName: string;
+    docUrl: string;
     name: string;
     webViewLink: string;
     status?: boolean;
@@ -49,11 +54,27 @@ const Folders = () => {
         setPage(1);
     }, [pageSize]);
 
+    const getFiles = () => {
+        const userEmail = user?.email ? user.email : 'test@admin.com'
+        getSelectedFiles(userEmail)
+            .then(response => {
+                // Handle successful response
+                setRecordsData(response.data);
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error fetching files:', error);
+            });
+    }
+
     useEffect(() => {
         const from = (page - 1) * pageSize;
         const to = from + pageSize;
         setRecordsData([...initialRecords.slice(from, to)]);
+        getFiles()
     }, [page, pageSize, initialRecords]);
+
+    
 
     useEffect(() => {
         setInitialRecords(() => {
@@ -73,7 +94,11 @@ const Folders = () => {
         setInitialRecords(sortBy(selectedRecords, 'name'));
         setRecordsData(selectedRecords);
         const fileIds = selectedRecords.map((record: { id: any; }) => record.id);
-        processFiles(fileIds, 'Amazon', user?.email ? user.email : '');
+        processFiles(fileIds, user?.email ? user.email : '');
+    };
+
+    const getFileName = () => {
+        return recordsData.name || recordsData.docName
     };
 
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
@@ -100,6 +125,7 @@ const Folders = () => {
         setRowData(updatedRowData);
         setInitialRecords(updatedInitialRecords);
         setRecordsData(updatedRecordsData);
+        deleteFile(idToDelete, user?.email ? user.email : '')
     };
 
     return (
@@ -170,11 +196,11 @@ const Folders = () => {
                                     title: 'Name',
                                     sortable: true,
                                     titleClassName: 'flex items-center',
-                                    render: ({ name, id, webViewLink }) => (
+                                    render: ({ docName, docId, docUrl }) => (
                                         <div className="flex w-max items-center name-column">
                                             {/* <div>{name}</div> */}
-                                            <a href={webViewLink} target="_blank" rel="noopener noreferrer">
-                                                {name}
+                                            <a href={docUrl} target="_blank" rel="noopener noreferrer">
+                                                {docName}
                                             </a>
                                         </div>
                                     ),
@@ -183,9 +209,9 @@ const Folders = () => {
                                     accessor: 'action',
                                     title: 'Action',
                                     titleClassName: '!text-center action-column',
-                                    render: ({ id }) => (
+                                    render: ({ docId }) => (
                                         <div className="mx-auto flex w-max items-center gap-2"
-                                            onClick={() => handleDelete(id)}
+                                            onClick={() => handleDelete(docId)}
                                         >
                                             <Tippy content="Delete">
                                                 <IconTrashLines />

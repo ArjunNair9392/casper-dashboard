@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-export const processFiles = async (fileIds: string[], userId: string) => {
+export const deleteFile = async (fileId: string, userId: string) => {
     try {
-        console.log("processFiles")
         const data = {
-            fileIds: fileIds,
+            fileId: fileId,
             userId: userId
         };
 
-        const response = await axios.post('https://uploadservice-juzqocjfea-uc.a.run.app/processFiles', data);
-        // const response = await axios.post('http://192.168.1.69:8080/processFiles', data);
+        const response = await axios.post('https://uploadservice-juzqocjfea-uc.a.run.app/deleteFile', data);
+        // const response = await axios.post('http://192.168.1.69:8080/deleteFile', data);
+        console.log('Files going to be deleted successfully:', data)
 
         if (response.status === 200) {
             console.log('Files processed successfully:', response.data);
