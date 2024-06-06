@@ -9,9 +9,14 @@ import IconInstagram from '../Icon/IconInstagram';
 import IconFacebookCircle from '../Icon/IconFacebookCircle';
 import IconTwitter from '../Icon/IconTwitter';
 import IconGoogle from '../Icon/IconGoogle';
+import { signIn } from "next-auth/react";
 
 const Registration = () => {
     const router = useRouter();
+
+    const handleClick = () => {
+        signIn("google");
+    };
 
     const submitForm = (e: any) => {
         e.preventDefault();
@@ -124,13 +129,13 @@ const Registration = () => {
                                         </Link>
                                     </li>
                                     <li>
-                                        <Link
-                                            href="#"
+                                        <button
+                                            onClick={() => { handleClick() }}
                                             className="inline-flex h-8 w-8 items-center justify-center rounded-full p-0 transition hover:scale-110"
                                             style={{ background: 'linear-gradient(135deg, rgba(239, 18, 98, 1) 0%, rgba(67, 97, 238, 1) 100%)' }}
                                         >
                                             <IconGoogle />
-                                        </Link>
+                                        </button>
                                     </li>
                                 </ul>
                             </div>

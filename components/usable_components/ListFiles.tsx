@@ -14,6 +14,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import ConfirmationModal from '@/components/ConfirmationModal';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/router';
+import { useSession } from "next-auth/react"
 
 interface FileData {
     id: string;
@@ -38,7 +39,7 @@ const showAlert = async () => {
 
 const ListFiles: React.FC<Props> = ({ onSave }) => {
     const router = useRouter();
-    const { user } = useUser();
+    const { data: session, status } = useSession();
     const [listFilesModal, setListFilesModal] = useState(false);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
@@ -46,7 +47,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
     const [recordsData, setRecordsData] = useState<FileData[]>(sortBy([...initialRecords.slice(0, pageSize)], 'name'));
     const [search, setSearch] = useState('');
     const [selectedRecords, setSelectedRecords] = useState<any>([]);
-    const [refreshCode, setRefreshCode] = useState(localStorage.getItem('code'));
+    const [refreshCode, setRefreshCode] = useState(typeof window !== "undefined" ? window.localStorage.getItem('code') : '');
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
         columnAccessor: 'name',
         direction: 'asc',
@@ -79,7 +80,8 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
     }, [initialRecords]);
 
     const getFiles = (code: string) => {
-        const userEmail = user?.email ? user.email : 'test@admin.com'
+        const userEmail: string = session?.user?.email ?? 'test@admin.com';
+
         getListFiles(userEmail, code)
             .then(response => {
                 // Handle successful response

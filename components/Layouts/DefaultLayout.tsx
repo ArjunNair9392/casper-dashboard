@@ -6,14 +6,14 @@ import App from '../../App';
 import Footer from './Footer';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import Setting from './Setting';
 import Portals from '../../components/Portals';
 import { useRouter } from 'next/router';
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useSession } from 'next-auth/react';
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
     const router = useRouter();
-    const { user, error, isLoading } = useUser();
+    const { data: session, status } = useSession()
+
     const [showLoader, setShowLoader] = useState(true);
     const [showTopButton, setShowTopButton] = useState(false);
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
@@ -104,11 +104,11 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                 {/* END APP SETTING LAUNCHER */}
                 <div className={`${themeConfig.navbar} main-container min-h-screen text-black dark:text-white-dark`}>
                     {/* BEGIN SIDEBAR */}
-                    {user && <Sidebar />}
+                    {session && <Sidebar />}
                     {/* END SIDEBAR */}
-                    <div className={user ? "main-content flex flex-col min-h-screen" : ""}>
+                    <div className={session ? "main-content flex flex-col min-h-screen" : ""}>
                         {/* BEGIN TOP NAVBAR */}
-                        {user && <Header />}
+                        {session && <Header />}
                         {/* END TOP NAVBAR */}
 
                         {/* BEGIN CONTENT AREA */}
@@ -122,7 +122,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                     </div>
                 </div>
             </div>
-        </App>
+        </App >
     );
 };
 

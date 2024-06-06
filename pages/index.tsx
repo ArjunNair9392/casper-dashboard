@@ -7,26 +7,27 @@ import HomeScreen from "@/components/HomeScreen/HomeScreen";
 import MultiStepLogin from "@/components/MultistepLogin/MultistepLogin";
 import Registration from "@/components/Registration/Registration";
 import Dashboard from "@/components/Dashboard/Dashboard";
+import { useSession } from "next-auth/react";
 
 function index() {
-    const { user, error, isLoading } = useUser();
+    const { data: session, status } = useSession();
     const router = useRouter();
     const [isAdminRegistered, setIsAdminRegistered] = useState(false);
 
     useEffect(() => {
-        if (user) {
+        if (session && session.user) {
             //API CALL FOR GET ADMIN INFO
         }
-    }, [user]);
+    }, [session]);
 
     const handleRegisterClick = () => {
         router.push('/usable/company_details');
     };
 
-    if (isLoading) return <div>Loading...</div>
-    if (error) return <div>{error.message}</div>
+    if (status === 'loading') return <div>Loading...</div>
+    // if (error) return <div>{error.message}</div>
 
-    if (user) {
+    if (status === "authenticated") {
         return (
             <div className="flex flex-col items-center justify-center">
                 <>

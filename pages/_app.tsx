@@ -7,7 +7,7 @@ import Head from 'next/head';
 
 import { appWithI18Next } from 'ni18n';
 import { ni18nConfig } from 'ni18n.config.ts';
-import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { SessionProvider } from "next-auth/react"
 
 // Perfect Scrollbar
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -25,9 +25,10 @@ type AppPropsWithLayout = AppProps & {
 
 const App = ({ Component, pageProps }: AppPropsWithLayout) => {
     const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>);
+    const { session } = pageProps;
 
     return (
-        <UserProvider>
+        <SessionProvider session={session}>
             <Provider store={store}>
                 <Head>
                     <title>Casper Dashboard</title>
@@ -40,7 +41,7 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
 
                 {getLayout(<Component {...pageProps} />)}
             </Provider>
-        </UserProvider>
+        </SessionProvider>
     );
 };
 export default appWithI18Next(App, ni18nConfig);

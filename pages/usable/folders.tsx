@@ -10,8 +10,7 @@ import IconShare from '@/components/Icon/IconShare';
 import { Dialog, Transition } from '@headlessui/react';
 import IconSearch from '@/components/Icon/IconSearch';
 import ListFiles from '@/components/usable_components/ListFiles';
-import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useSession } from "next-auth/react";
 import { processFiles } from '@/services/processFiles';
 import { deleteFile } from '@/services/deleteFile';
 import IconCircleCheck from '@/components/Icon/IconCircleCheck';
@@ -30,7 +29,7 @@ interface FileData {
 
 const Folders = () => {
     const dispatch = useDispatch();
-    const { user } = useUser();
+    const { data: session, status } = useSession();
 
     useEffect(() => {
         dispatch(setPageTitle('Folders'));
@@ -49,13 +48,13 @@ const Folders = () => {
     const [recordsData, setRecordsData] = useState<FileData[]>([]);
     const [shareModal, setShareModal] = useState(false);
     const [search, setSearch] = useState('');
+    const userEmail: string = session?.user?.email ?? 'test@admin.com';
 
     useEffect(() => {
         setPage(1);
     }, [pageSize]);
 
     const getFiles = () => {
-        const userEmail = user?.email ? user.email : 'test@admin.com'
         getSelectedFiles(userEmail)
             .then(response => {
                 // Handle successful response
@@ -74,7 +73,7 @@ const Folders = () => {
         getFiles()
     }, [page, pageSize, initialRecords]);
 
-    
+
 
     useEffect(() => {
         setInitialRecords(() => {
@@ -94,11 +93,13 @@ const Folders = () => {
         setInitialRecords(sortBy(selectedRecords, 'name'));
         setRecordsData(selectedRecords);
         const fileIds = selectedRecords.map((record: { id: any; }) => record.id);
-        processFiles(fileIds, user?.email ? user.email : '');
+        const userEmail: string = session?.user?.email ?? 'test@admin.com';
+        processFiles(fileIds, userEmail);
     };
 
     const getFileName = () => {
-        return recordsData.name || recordsData.docName
+        //return recordsData.name || recordsData.docName
+        return 'filename';
     };
 
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
@@ -125,7 +126,7 @@ const Folders = () => {
         setRowData(updatedRowData);
         setInitialRecords(updatedInitialRecords);
         setRecordsData(updatedRecordsData);
-        deleteFile(idToDelete, user?.email ? user.email : '')
+        deleteFile(idToDelete, userEmail);
     };
 
     return (
@@ -251,4 +252,4 @@ const Folders = () => {
     );
 };
 
-export default withPageAuthRequired(Folders);
+export default Folders;
