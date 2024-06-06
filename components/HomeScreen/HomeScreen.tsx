@@ -1,5 +1,4 @@
 // import styles from './Homescreen2.module.scss';
-import { useUser } from "@auth0/nextjs-auth0/client";
 import GoogleConnect from '../SocialMediaConnectors/GoogleConnect/GoogleConnect';
 import OneDriveConnect from '../SocialMediaConnectors/OneDriveConnect/OneDriveConnect';
 import SharePointConnect from '../SocialMediaConnectors/SharePointConnect/SharePoint';
@@ -17,7 +16,6 @@ function formatDate(date: Date) {
 }
 
 const HomeScreen = () => {
-    const { user } = useUser();
     const companyName = 'Amazon'; //REPLACE WITH COMPANY FROM API
 
     return (

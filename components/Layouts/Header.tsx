@@ -7,36 +7,13 @@ import { toggleLocale, toggleTheme, toggleSidebar, toggleRTL } from '../../store
 import { useTranslation } from 'react-i18next';
 import Dropdown from '../Dropdown';
 import IconMenu from '@/components/Icon/IconMenu';
-import IconCalendar from '@/components/Icon/IconCalendar';
-import IconEdit from '@/components/Icon/IconEdit';
-import IconChatNotification from '@/components/Icon/IconChatNotification';
-import IconSearch from '@/components/Icon/IconSearch';
-import IconXCircle from '@/components/Icon/IconXCircle';
-import IconSun from '@/components/Icon/IconSun';
-import IconMoon from '@/components/Icon/IconMoon';
-import IconLaptop from '@/components/Icon/IconLaptop';
-import IconMailDot from '@/components/Icon/IconMailDot';
-import IconArrowLeft from '@/components/Icon/IconArrowLeft';
-import IconInfoCircle from '@/components/Icon/IconInfoCircle';
-import IconBellBing from '@/components/Icon/IconBellBing';
-import IconUser from '@/components/Icon/IconUser';
-import IconMail from '@/components/Icon/IconMail';
-import IconLockDots from '@/components/Icon/IconLockDots';
 import IconLogout from '@/components/Icon/IconLogout';
-import IconMenuDashboard from '@/components/Icon/Menu/IconMenuDashboard';
-import IconCaretDown from '@/components/Icon/IconCaretDown';
-import IconMenuApps from '@/components/Icon/Menu/IconMenuApps';
-import IconMenuComponents from '@/components/Icon/Menu/IconMenuComponents';
-import IconMenuElements from '@/components/Icon/Menu/IconMenuElements';
-import IconMenuDatatables from '@/components/Icon/Menu/IconMenuDatatables';
-import IconMenuForms from '@/components/Icon/Menu/IconMenuForms';
-import IconMenuPages from '@/components/Icon/Menu/IconMenuPages';
-import IconMenuMore from '@/components/Icon/Menu/IconMenuMore';
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useSession, signOut } from "next-auth/react"
+import IconUser from '../Icon/IconUser';
 
 const Header = () => {
     const router = useRouter();
-    const { user, error, isLoading } = useUser();
+    const { data: session, status } = useSession();
     const [currentUser, setCurrentUser] = useState({
         name: 'John Doe',
         email: 'johndoe@email.com',
@@ -44,14 +21,14 @@ const Header = () => {
     })
 
     useEffect(() => {
-        if (user) {
+        if (session?.user?.email) {
             setCurrentUser({
-                name: user.name || 'John Doe',
-                email: user.email || 'johndoe@email.com',
-                profilePicture: user.picture || '/assets/images/default-profile.jpeg'
+                name: session?.user?.name || 'John Doe',
+                email: session?.user?.email ?? 'test@admin.com',
+                profilePicture: session?.user.image || '/assets/images/default-profile.jpeg'
             })
         }
-    }, [user])
+    }, [session])
 
 
     useEffect(() => {
@@ -249,7 +226,7 @@ const Header = () => {
                                         </Link>
                                     </li>
                                     <li className="border-t border-white-light dark:border-white-light/10">
-                                        <Link href="/api/auth/logout" className="!py-3 text-danger">
+                                        <Link href="#" onClick={() => signOut({ callbackUrl: 'http://localhost:8080/' })} className="!py-3 text-danger">
                                             <IconLogout className="h-4.5 w-4.5 shrink-0 rotate-90 ltr:mr-2 rtl:ml-2" />
                                             Sign Out
                                         </Link>

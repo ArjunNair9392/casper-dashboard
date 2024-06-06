@@ -10,7 +10,6 @@ import IconX from '@/components/Icon/IconX';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import sortBy from 'lodash/sortBy';
 import { getListFiles } from '../../services/listFiles';
-import { useUser } from "@auth0/nextjs-auth0/client";
 import ConfirmationModal from '@/components/ConfirmationModal';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/router';
@@ -67,7 +66,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         if (code) {
-            localStorage.setItem('code', code);
+            window.localStorage.setItem('code', code);
             router.push('/usable/folders');
             getFiles(code);
         }

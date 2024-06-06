@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useUser } from "@auth0/nextjs-auth0/client";
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';

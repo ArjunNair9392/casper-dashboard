@@ -5,10 +5,8 @@ import { setPageTitle } from '../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
 import { stateAbbreviations } from '../../helpers/constants';
 import { registerCompany } from '@/services/registrationService';
-import { useUser } from "@auth0/nextjs-auth0/client";
 
 const CompanyDetails = () => {
-    const { user, error, isLoading } = useUser();
     const router = useRouter();
     const dispatch = useDispatch();
     useEffect(() => {
@@ -20,7 +18,7 @@ const CompanyDetails = () => {
         city: '',
         state: '',
         phone_number: '',
-        admin_email: user?.email ? user.email : ''
+        admin_email: ''
     });
     const [phoneError, setPhoneError] = useState('');
     const [cityError, setCityError] = useState('');
