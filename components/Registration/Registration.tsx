@@ -102,39 +102,15 @@ const Registration = () => {
                             <div className="mb-10 md:mb-[60px]">
                                 <ul className="flex justify-center gap-3.5 text-white">
                                     <li>
-                                        <Link
-                                            href="#"
-                                            className="inline-flex h-8 w-8 items-center justify-center rounded-full p-0 transition hover:scale-110"
-                                            style={{ background: 'linear-gradient(135deg, rgba(239, 18, 98, 1) 0%, rgba(67, 97, 238, 1) 100%)' }}
-                                        >
-                                            <IconInstagram />
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            href="#"
-                                            className="inline-flex h-8 w-8 items-center justify-center rounded-full p-0 transition hover:scale-110"
-                                            style={{ background: 'linear-gradient(135deg, rgba(239, 18, 98, 1) 0%, rgba(67, 97, 238, 1) 100%)' }}
-                                        >
-                                            <IconFacebookCircle />
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            href="#"
-                                            className="inline-flex h-8 w-8 items-center justify-center rounded-full p-0 transition hover:scale-110"
-                                            style={{ background: 'linear-gradient(135deg, rgba(239, 18, 98, 1) 0%, rgba(67, 97, 238, 1) 100%)' }}
-                                        >
-                                            <IconTwitter fill={true} />
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <button
+                                        {/* <button
                                             onClick={() => { handleClick() }}
                                             className="inline-flex h-8 w-8 items-center justify-center rounded-full p-0 transition hover:scale-110"
                                             style={{ background: 'linear-gradient(135deg, rgba(239, 18, 98, 1) 0%, rgba(67, 97, 238, 1) 100%)' }}
                                         >
-                                            <IconGoogle />
+
+                                        </button> */}
+                                        <button onClick={() => { handleClick() }} className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
+                                            <IconGoogle />  Sign in with google
                                         </button>
                                     </li>
                                 </ul>

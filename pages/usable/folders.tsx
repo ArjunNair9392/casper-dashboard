@@ -129,6 +129,10 @@ const Folders = () => {
         deleteFile(idToDelete, userEmail);
     };
 
+    if (status === "unauthenticated") {
+        return <p>Access Denied</p>
+    }
+
     return (
         <div>
             <div className="panel mt-6">
