@@ -97,10 +97,10 @@ const Folders = () => {
         processFiles(fileIds, userEmail);
     };
 
-    const getFileName = () => {
-        //return recordsData.name || recordsData.docName
-        return 'filename';
-    };
+    // TODO: (Dev)
+    // const getFileName = () => {
+    //     return recordsData.name || recordsData.docName
+    // };
 
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
         columnAccessor: 'name',

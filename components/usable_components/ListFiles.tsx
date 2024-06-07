@@ -29,8 +29,8 @@ const PAGE_SIZES = [10, 20, 30, 50, 100];
 const showAlert = async () => {
     Swal.fire({
         icon: 'success',
-        title: 'Update successful!',
-        text: 'You have shared successfully!',
+        title: 'File Share successful!',
+        text: 'We will send you an email once we have trained our models with your files!',
         padding: '2em',
         customClass: 'sweet-alerts',
     });
