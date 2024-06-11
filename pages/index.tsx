@@ -33,13 +33,13 @@ function index() {
                     {/* <HomeScreen /> */}
                     <Dashboard />
                 </>
-                {!isAdminRegistered && (
+                {/* {!isAdminRegistered && (
                     <div className="bg-alert px-4 py-3 rounded relative mb-4 mt-4" role="alert">
                         <span className="mr-2"><FontAwesomeIcon icon={faInfoCircle} /></span>
                         <strong className="font-bold">Info:</strong>
                         <span className="block sm:inline">It seems that you are not registered as an admin. Please register <button onClick={handleRegisterClick} className="text-blue-500">here</button>.</span>
                     </div>
-                )}
+                )} */}
                 <style jsx>{`
                 .bg-alert {
                     background-color: #fff3e5;

@@ -2,11 +2,11 @@ import 'dotenv/config';
 
 const oauth2Endpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
 const scope = encodeURIComponent('https://www.googleapis.com/auth/drive.readonly');
-const state = encodeURIComponent('http://localhost:8080');
-const redirectUri = encodeURIComponent('http://localhost:8080/usable/folders');
+const state = encodeURIComponent('https://casper-dashboard.vercel.app');
+const redirectUri = encodeURIComponent('https://casper-dashboard.vercel.app/usable/folders');
 
 const responseType = 'code';
-const clientId = process.env.GOOGLE_CLIENT_ID;
+const clientId = process.env.GOOGLE_CLIENT_ID || '771148068297-ke9e4o4c7gjhduggsi2cu1tgtmgelav2.apps.googleusercontent.com';
 
 export const googleAuthURL = `${oauth2Endpoint}?scope=${scope}&access_type=offline&include_granted_scopes=true&response_type=${responseType}&state=${state}&redirect_uri=${redirectUri}&client_id=${clientId}`;
 
