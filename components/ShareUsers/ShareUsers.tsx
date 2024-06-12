@@ -3,7 +3,7 @@ import IconX from '../Icon/IconX';
 import EmailPill from '../usable_components/EmailPill';
 import ConfirmationModal from '../ConfirmationModal';
 import { getShareUsers } from '../../services/sharedUsers';
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useSession } from "next-auth/react";
 
 interface ShareUsersProps {
     setShareModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -14,16 +14,16 @@ const ShareUsers: React.FC<ShareUsersProps> = ({ setShareModal }) => {
     const [emails, setEmails] = useState<string[]>([]);
     const [currentEmail, setCurrentEmail] = useState<string>('');
     const [confirmShare, setConfirmShare] = useState(false);
-    const { user } = useUser();
+    const { data: session, status } = useSession();
 
     const isValidEmail = (email: string) => {
         // Regular expression for validating email format
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailPattern.test(email);
-    }; 
+    };
 
     useEffect(() => {
-        const userEmail = user?.email ? user.email : 'test@admin.com'
+        const userEmail: string = session?.user?.email ?? 'test@admin.com';
         // console.log(getShareUsers(userEmail));
         getShareUsers(userEmail)
             .then(response => {
@@ -109,7 +109,7 @@ const ShareUsers: React.FC<ShareUsersProps> = ({ setShareModal }) => {
             <div className="px-5 py-3">
                 <h6 className="text-sm font-semibold mb-2">Already added users:</h6>
                 <ul>
-                    {existingUsers.map((user,index) => (
+                    {existingUsers.map((user, index) => (
                         <EmailPill key={index} email={user} index={index} removeEmail={() => removeEmail(index)} />
                     ))}
                 </ul>
