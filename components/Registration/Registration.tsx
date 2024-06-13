@@ -53,11 +53,12 @@ const Registration = () => {
                         <div className="w-full max-w-[440px] lg:mt-16">
                             <div className="mb-10 flex items-center">
                                 <div className="mb-10">
-                                    <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">Sign Up</h1>
-                                    <p className="text-base font-bold leading-normal text-white-dark">Enter your email and password to register</p>
+                                    <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">Welcome</h1>
+                                    {/* <p className="text-base font-bold leading-normal text-white-dark">Enter your email and password to register</p> */}
+                                    <p className="text-base font-bold leading-normal text-white-dark">Sign in with your Google account</p>
                                 </div>
                             </div>
-                            <form className="space-y-5 dark:text-white" onSubmit={submitForm}>
+                            {/* <form className="space-y-5 dark:text-white" onSubmit={submitForm}>
                                 <div>
                                     <label htmlFor="Name">Name</label>
                                     <div className="relative text-white-dark">
@@ -98,32 +99,25 @@ const Registration = () => {
                             <div className="relative my-7 text-center md:mb-9">
                                 <span className="absolute inset-x-0 top-1/2 h-px w-full -translate-y-1/2 bg-white-light dark:bg-white-dark"></span>
                                 <span className="relative bg-white px-2 font-bold uppercase text-white-dark dark:bg-dark dark:text-white-light">or</span>
-                            </div>
+                            </div> */}
                             <div className="mb-10 md:mb-[60px]">
                                 <ul className="flex justify-center gap-3.5 text-white">
                                     <li>
-                                        {/* <button
-                                            onClick={() => { handleClick() }}
-                                            className="inline-flex h-8 w-8 items-center justify-center rounded-full p-0 transition hover:scale-110"
-                                            style={{ background: 'linear-gradient(135deg, rgba(239, 18, 98, 1) 0%, rgba(67, 97, 238, 1) 100%)' }}
-                                        >
-
-                                        </button> */}
                                         <button onClick={() => { handleClick() }} className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
                                             <IconGoogle />  Sign in with google
                                         </button>
                                     </li>
                                 </ul>
                             </div>
-                            <div className="text-center dark:text-white">
+                            {/* <div className="text-center dark:text-white">
                                 Already have an account ?&nbsp;
                                 <Link href="/auth/cover-login" className="uppercase text-primary underline transition hover:text-black dark:hover:text-white">
                                     SIGN IN
                                 </Link>
-                            </div>
+                            </div> */}
 
                         </div>
-                        <p className="absolute bottom-6 w-full text-center dark:text-white">© {new Date().getFullYear()}.VRISTO All Rights Reserved.</p>
+                        <p className="absolute bottom-6 w-full text-center dark:text-white">© {new Date().getFullYear()}.CasperAI All Rights Reserved.</p>
                     </div>
                 </div>
             </div>

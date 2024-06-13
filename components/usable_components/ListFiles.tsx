@@ -1,4 +1,4 @@
-import { useEffect, useState, Fragment } from 'react';
+import { useEffect, useState, useRef, Fragment } from 'react';
 import 'tippy.js/dist/tippy.css';
 import IconUserPlus from '@/components/Icon/IconUserPlus';
 import { Dialog, Transition } from '@headlessui/react';
@@ -13,7 +13,7 @@ import { getListFiles } from '../../services/listFiles';
 import ConfirmationModal from '@/components/ConfirmationModal';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/router';
-import { useSession } from "next-auth/react"
+import { useSession } from "next-auth/react";
 
 interface FileData {
     id: string;
@@ -52,6 +52,8 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
         direction: 'asc',
     });
     const [confirmFileSaveModal, setConfirmFileSaveModal] = useState(false);
+    const isInitialMount = useRef(true);
+    const hasCalledGetFiles = useRef(false); // Ref to track if getFiles has been called
 
     const generateGoogleAuthURL = () => {
         setListFilesModal(true);
@@ -63,14 +65,17 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
     }
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-        if (code) {
-            window.localStorage.setItem('code', code);
-            router.push('/usable/folders');
-            getFiles(code);
+        if (isInitialMount.current) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            if (code) {
+                window.localStorage.setItem('code', code);
+                router.push('/usable/folders');
+                getFiles(code);
+            }
+            isInitialMount.current = false;
         }
-    }, []);
+    }, [router]);
 
     useEffect(() => {
         if (initialRecords.length) {
@@ -79,12 +84,21 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
     }, [initialRecords]);
 
     const getFiles = (code: string) => {
+        // Guard clause to prevent multiple calls
+        if (hasCalledGetFiles.current) {
+            console.log('getFiles already called, skipping...');
+            return;
+        }
+        console.log('getFiles called with code:', code);
+        hasCalledGetFiles.current = true; // Mark as called
+
         const userEmail: string = session?.user?.email ?? 'test@admin.com';
 
         getListFiles(userEmail, code)
             .then(response => {
                 // Handle successful response
                 setInitialRecords(response.data);
+                console.log('Files fetched successfully:', response.data);
             })
             .catch(error => {
                 // Handle error

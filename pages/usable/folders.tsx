@@ -30,6 +30,19 @@ interface FileData {
 const Folders = () => {
     const dispatch = useDispatch();
     const { data: session, status } = useSession();
+    const [userEmail, setUserEmail] = useState('test@admin.com');
+
+    useEffect(() => {
+        if (session?.user?.email) {
+            setUserEmail(session.user.email);
+        }
+    }, [session])
+
+    useEffect(() => {
+        if (userEmail != 'test@admin.com') {
+            getFiles();
+        }
+    }, [userEmail])
 
     useEffect(() => {
         dispatch(setPageTitle('Folders'));
@@ -48,7 +61,6 @@ const Folders = () => {
     const [recordsData, setRecordsData] = useState<FileData[]>([]);
     const [shareModal, setShareModal] = useState(false);
     const [search, setSearch] = useState('');
-    const userEmail: string = session?.user?.email ?? 'test@admin.com';
 
     useEffect(() => {
         setPage(1);
@@ -70,7 +82,6 @@ const Folders = () => {
         const from = (page - 1) * pageSize;
         const to = from + pageSize;
         setRecordsData([...initialRecords.slice(from, to)]);
-        getFiles()
     }, [page, pageSize, initialRecords]);
 
 

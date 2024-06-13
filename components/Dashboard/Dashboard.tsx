@@ -27,14 +27,32 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import GoogleConnect from '../SocialMediaConnectors/GoogleConnect/GoogleConnect';
 import OneDriveConnect from '../SocialMediaConnectors/OneDriveConnect/OneDriveConnect';
 import SharePointConnect from '../SocialMediaConnectors/SharePointConnect/SharePoint';
+import { addUsers } from '@/services/addUser';
+import { useSession } from 'next-auth/react';
 
 const Dashboard = () => {
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl';
-    const [isMounted, setIsMounted] = useState(false);
+    const [userStatus, setUserStatus] = useState('');
+    const { data: session, status } = useSession();
+
     useEffect(() => {
-        setIsMounted(true);
+        getUserStatus();
     }, []);
+
+    const getUserStatus = () => {
+        const userEmail: string = session?.user?.email ?? 'test@admin.com';
+        addUsers(userEmail, 'TestCompany')
+            .then(response => {
+                // Handle successful response
+                console.log({ response });
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error fetching files:', error);
+            });
+    }
+
 
     // totalVisitOptions
     const totalVisit: any = {

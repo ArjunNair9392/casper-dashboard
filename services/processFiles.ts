@@ -2,7 +2,6 @@ import axios from 'axios';
 
 export const processFiles = async (fileIds: string[], userId: string) => {
     try {
-        console.log("processFiles")
         const data = {
             fileIds: fileIds,
             userId: userId
