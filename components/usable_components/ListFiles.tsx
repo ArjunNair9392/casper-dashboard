@@ -70,7 +70,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
             const code = urlParams.get('code');
             if (code) {
                 window.localStorage.setItem('code', code);
-                router.push('/usable/folders');
+                router.push('/usable/folder_path');
                 getFiles(code);
             }
             isInitialMount.current = false;

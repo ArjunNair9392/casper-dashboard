@@ -15,7 +15,7 @@ const Registration = () => {
 
     const submitForm = (e: any) => {
         e.preventDefault();
-        router.push('/usable/folders');
+        router.push('/usable/folder_path');
     };
     return (
         <div>

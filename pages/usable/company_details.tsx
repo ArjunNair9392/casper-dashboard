@@ -54,7 +54,7 @@ const CompanyDetails = () => {
         e.preventDefault();
         try {
             await registerCompany(formData);
-            router.push('/usable/folders');
+            router.push('/usable/folder_path');
         } catch (error) {
             console.error('Error:', error);
         }

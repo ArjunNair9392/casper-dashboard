@@ -187,7 +187,7 @@ const MultistepLogin: React.FC = () => {
             if (currentStep < 3) {
                 setCurrentStep(prev => prev + 1);
             } else {
-                router.push('/usable/folders');
+                router.push('/usable/folder_path');
                 console.log('Form submitted:', values);
             }
         },
