@@ -9,7 +9,7 @@ interface AddChannelProps {
 }
 
 const AddChannel: React.FC<AddChannelProps> = ({ setCreateFolderModal }) => {
-    const [channel, setChannel] = useState<string[]>([]);
+    const [channel, setChannel] = useState<string>('');
     const [currentEmail, setCurrentEmail] = useState<string>('');
     const [confirmShare, setConfirmShare] = useState(false);
     const { data: session, status } = useSession();
@@ -62,8 +62,8 @@ const AddChannel: React.FC<AddChannelProps> = ({ setCreateFolderModal }) => {
                 <input
                     id="emailInput"
                     type="text"
-                    value={currentEmail}
-                    onChange={(e) => setCurrentEmail(e.target.value)}
+                    value={channel}
+                    onChange={(e) => setChannel(e.target.value)}
                     className="p-2 mb-2 mr-2 ml-2 border border-gray-300 rounded max-w-lg"
                 />
             </div>
