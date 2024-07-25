@@ -3,11 +3,6 @@ import IconLockDots from '@/components/Icon/icon-lock-dots';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import IconUser from '../Icon/IconUser';
-import IconMail from '../Icon/IconMail';
-import IconInstagram from '../Icon/IconInstagram';
-import IconFacebookCircle from '../Icon/IconFacebookCircle';
-import IconTwitter from '../Icon/IconTwitter';
 import IconGoogle from '../Icon/IconGoogle';
 import { signIn } from "next-auth/react";
 
@@ -104,7 +99,7 @@ const Registration = () => {
                                 <ul className="flex justify-center gap-3.5 text-white">
                                     <li>
                                         <button onClick={() => { handleClick() }} className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
-                                            <IconGoogle />  Sign in with google
+                                            <p className='space-x-2'> <IconGoogle /></p>  Sign in with google
                                         </button>
                                     </li>
                                 </ul>

@@ -16,6 +16,7 @@ import { deleteFile } from '@/services/deleteFile';
 import IconCircleCheck from '@/components/Icon/IconCircleCheck';
 import ShareUsers from '@/components/ShareUsers/ShareUsers';
 import { getSelectedFiles } from '../../services/selectedFiles';
+import MultiTabs from '@/components/MultiTabs/MultiTabs';
 
 interface FileData {
     id: string;
@@ -27,10 +28,15 @@ interface FileData {
     status?: boolean;
 }
 
-const Folders = () => {
+interface FoldersProps {
+    fileData: [];
+}
+
+const Folders: React.FC<FoldersProps> = ({ fileData }) => {
     const dispatch = useDispatch();
     const { data: session, status } = useSession();
     const [userEmail, setUserEmail] = useState('test@admin.com');
+
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -40,7 +46,9 @@ const Folders = () => {
 
     useEffect(() => {
         if (userEmail != 'test@admin.com') {
-            getFiles();
+            if (fileData && fileData.length == 0) {
+                getFiles();
+            }
         }
     }, [userEmail])
 
@@ -99,7 +107,6 @@ const Folders = () => {
     }, [search]);
 
     const handleListFilesSave = (selectedRecords: any) => {
-        //console.log('Selected Records in Folders:', selectedRecords);
         setRowData(selectedRecords)
         setInitialRecords(sortBy(selectedRecords, 'name'));
         setRecordsData(selectedRecords);

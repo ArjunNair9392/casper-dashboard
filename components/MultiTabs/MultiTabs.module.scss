@@ -1,0 +1,35 @@
+.sectionJobsContainer {
+    margin-top: 50px;
+    max-width: 700px;
+    position: relative;
+
+    span {
+        border-left: 2px solid #64ffda;
+        font-size: 12px;
+        z-index: 10;
+        position: absolute;
+        top: 0;
+        left: 15px;
+        display: inline-block;
+        width: 2px;
+        height: 42px;
+        transition: transform 0.5s;
+
+        &.index1Chosen {
+            transform: translateY(0px);
+        }
+
+        &.index2Chosen {
+            transform: translateY(42px);
+        }
+
+        &.index3Chosen {
+            transform: translateY(84px);
+        }
+    }
+}
+
+.sectionJobsStyledTabList {
+    max-width: 130px;
+    padding: 0;
+}

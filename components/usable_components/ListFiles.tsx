@@ -89,7 +89,6 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
             console.log('getFiles already called, skipping...');
             return;
         }
-        console.log('getFiles called with code:', code);
         hasCalledGetFiles.current = true; // Mark as called
 
         const userEmail: string = session?.user?.email ?? 'test@admin.com';
@@ -98,7 +97,6 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
             .then(response => {
                 // Handle successful response
                 setInitialRecords(response.data);
-                console.log('Files fetched successfully:', response.data);
             })
             .catch(error => {
                 // Handle error
@@ -112,6 +110,10 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
 
     const handleConfirmFilesSave = () => {
         showAlert();
+        const currentSelectRecords = selectedRecords;
+        currentSelectRecords.forEach(row => {
+            row.docName = row.name;
+        });
         onSave(selectedRecords);
         setConfirmFileSaveModal(false);
         setListFilesModal(false);
@@ -204,11 +206,14 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
                                                             accessor: 'name',
                                                             title: 'File Name',
                                                             sortable: true,
-                                                            render: (rowData) => (
-                                                                <a href={rowData.webViewLink} target="_blank" rel="noopener noreferrer">
-                                                                    {rowData.name}
-                                                                </a>
-                                                            ),
+                                                            render: (rowData) => {
+                                                                console.log({ recordsData });
+                                                                return (
+                                                                    <a href={rowData.webViewLink} target="_blank" rel="noopener noreferrer">
+                                                                        {rowData.name}
+                                                                    </a>
+                                                                )
+                                                            },
                                                         },
                                                     ]}
                                                     loadingText={"Please wait while we fetch your files"}
