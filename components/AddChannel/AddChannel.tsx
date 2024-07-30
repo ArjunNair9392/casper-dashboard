@@ -6,13 +6,21 @@ import { addChannel } from '@/services/addChannel';
 
 interface AddChannelProps {
     setCreateFolderModal: React.Dispatch<React.SetStateAction<boolean>>;
+    channelNames?: string[];
+    setChannelNames?: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const AddChannel: React.FC<AddChannelProps> = ({ setCreateFolderModal }) => {
+const AddChannel: React.FC<AddChannelProps> = ({ setCreateFolderModal, channelNames = [], setChannelNames }) => {
     const [channel, setChannel] = useState<string>('');
-    const [currentEmail, setCurrentEmail] = useState<string>('');
+    const [userEmail, setUserEmail] = useState<string>('');
     const [confirmShare, setConfirmShare] = useState(false);
     const { data: session, status } = useSession();
+
+    useEffect(() => {
+        if (session?.user?.email) {
+            setUserEmail(session.user.email);
+        }
+    }, [session])
 
 
     // useEffect(() => {
@@ -38,9 +46,14 @@ const AddChannel: React.FC<AddChannelProps> = ({ setCreateFolderModal }) => {
     };
 
     const handleConfirmShare = () => {
-        addChannel('', '', '').then(response => {
-            console.log(response)
+        addChannel('TestCompany', channel, userEmail).then(response => {
+            console.log(response);
         })
+        if (setChannelNames) {
+            const currentChannelNames = [...channelNames];
+            currentChannelNames.push(channel);
+            setChannelNames([...currentChannelNames]);
+        }
         setConfirmShare(false);
         setCreateFolderModal(false);
     };

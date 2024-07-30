@@ -7,8 +7,8 @@ import AddChannel from '@/components/AddChannel/AddChannel';
 import IconPlus from '@/components/Icon/IconPlus';
 
 const FolderPath = () => {
-    const [folderPaths, setFolderPaths] = useState(['Folder 1', 'Folder 2', 'Folder3']);
-    const [selectedPath, setSelectedPath] = useState('Folder 1');
+    const [folderPaths, setFolderPaths] = useState(['Channel 1', 'Channel 2', 'Channel3']);
+    const [selectedPath, setSelectedPath] = useState('Channel 1');
     const [createFolderModal, setCreateFolderModal] = useState(false);
 
 
@@ -31,11 +31,11 @@ const FolderPath = () => {
 
     return (
         <div>
-            <div className="flex border-b mb-5">
+            <div className="flex">
                 {folderPaths.map(path => (
                     <button
                         key={path}
-                        className={`px-4 py-2 cursor-pointer bg-gray-200 border border-b-0 transition-colors ${selectedPath === path ? 'bg-white font-bold border-t border-r border-l' : 'hover:bg-gray-300'}`}
+                        className={`px-4 py-2 cursor-pointer bg-gray-200 border border-b-0 border-r-0 transition-colors ${selectedPath === path ? 'bg-white font-bold border-t border-r border-l' : 'hover:bg-gray-300'}`}
                         onClick={() => handleTabClick(path)}
                     >
                         {path}
@@ -73,7 +73,7 @@ const FolderPath = () => {
                                 leaveTo="opacity-0 scale-95"
                             >
                                 <Dialog.Panel as="div" className="panel my-8 w-full max-w-xl overflow-hidden rounded-lg border-0 p-0 text-black dark:text-white-dark">
-                                    <AddChannel setCreateFolderModal={setCreateFolderModal} />
+                                    <AddChannel setCreateFolderModal={setCreateFolderModal} channelNames={[...folderPaths]} setChannelNames={setFolderPaths} />
                                 </Dialog.Panel>
                             </Transition.Child>
                         </div>

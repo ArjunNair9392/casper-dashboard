@@ -153,7 +153,7 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
 
     return (
         <div>
-            <div className="panel mt-6">
+            <div className="panel">
                 <div className="flex flex-wrap items-center justify-between gap-5 mb-5">
                     <h2 className="text-xl">Files</h2>
                     <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
