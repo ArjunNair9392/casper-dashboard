@@ -4,14 +4,21 @@ import ConfirmationModal from '../ConfirmationModal';
 import { useSession } from "next-auth/react";
 import { addChannel } from '@/services/addChannel';
 
+interface Channel {
+    guid: string;
+    name: string;
+    type: string;
+}
+
 interface AddChannelProps {
     setCreateFolderModal: React.Dispatch<React.SetStateAction<boolean>>;
-    channelNames?: string[];
-    setChannelNames?: React.Dispatch<React.SetStateAction<string[]>>;
+    channelNames?: Channel[];
+    setChannelNames?: React.Dispatch<React.SetStateAction<Channel[]>>;
 }
 
 const AddChannel: React.FC<AddChannelProps> = ({ setCreateFolderModal, channelNames = [], setChannelNames }) => {
     const [channel, setChannel] = useState<string>('');
+    const [channelType, setChannelType] = useState<string>('');
     const [userEmail, setUserEmail] = useState<string>('');
     const [confirmShare, setConfirmShare] = useState(false);
     const { data: session, status } = useSession();
@@ -51,7 +58,7 @@ const AddChannel: React.FC<AddChannelProps> = ({ setCreateFolderModal, channelNa
         })
         if (setChannelNames) {
             const currentChannelNames = [...channelNames];
-            currentChannelNames.push(channel);
+            currentChannelNames.push({ guid: '1', name: channel, type: channelType });
             setChannelNames([...currentChannelNames]);
         }
         setConfirmShare(false);
@@ -71,12 +78,22 @@ const AddChannel: React.FC<AddChannelProps> = ({ setCreateFolderModal, channelNa
                 </button>
             </div>
             <div className="px-5 py-3 border-b border-gray-200 dark:border-gray-600">
-                <label htmlFor="emailInput" className="italic mb-2 p-2">Enter channel Name:</label>
+                <label htmlFor="channelName" className="italic mb-2 p-2">Enter channel name:</label>
                 <input
-                    id="emailInput"
+                    id="channelName"
                     type="text"
                     value={channel}
                     onChange={(e) => setChannel(e.target.value)}
+                    className="p-2 mb-2 mr-2 ml-2 border border-gray-300 rounded max-w-lg"
+                />
+            </div>
+            <div className="px-5 py-3 border-b border-gray-200 dark:border-gray-600">
+                <label htmlFor="channeltype" className="italic mb-2 p-2">Enter channel type:</label>
+                <input
+                    id="channeltype"
+                    type="text"
+                    value={channelType}
+                    onChange={(e) => setChannelType(e.target.value)}
                     className="p-2 mb-2 mr-2 ml-2 border border-gray-300 rounded max-w-lg"
                 />
             </div>

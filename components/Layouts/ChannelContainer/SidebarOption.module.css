@@ -1,0 +1,39 @@
+.sidebarOption {
+    display: flex;
+    align-items: center;
+    padding-left: 2px;
+    cursor: pointer;
+}
+
+.sidebarOption:hover {
+    opacity: 0.9;
+   background-color: rgb(0 0 0 / 0.08);
+}
+
+.sidebarOption__icon {
+    padding: 2px;
+    font-size: 15px !important;
+    opacity: 0.6;
+}
+
+.sidebarOption__channel {
+    padding: 10px 0;
+}
+
+.sidebarOption__hash {
+    padding: 2px;
+    padding-left: 12px;
+}
+
+.sidebarOption>h3 {
+    font-weight: 400;
+    opacity: 0.6;
+}
+
+.sidebarOption__sub {
+    margin-left: 10px;
+}
+
+.isOnline>.MuiSvgIcon-root {
+    color: green;
+}
