@@ -15,8 +15,8 @@ import { processFiles } from '@/services/processFiles';
 import { deleteFile } from '@/services/deleteFile';
 import IconCircleCheck from '@/components/Icon/IconCircleCheck';
 import ShareUsers from '@/components/ShareUsers/ShareUsers';
-import { getSelectedFiles } from '../../services/selectedFiles';
-import MultiTabs from '@/components/MultiTabs/MultiTabs';
+import { getSelectedFiles } from '@/services/selectedFiles';
+import { useChannel } from '@/context/ChannelContext';
 
 interface FileData {
     id: string;
@@ -29,7 +29,7 @@ interface FileData {
 }
 
 interface FoldersProps {
-    fileData: [];
+    fileData: FileData[];
 }
 
 const Folders: React.FC<FoldersProps> = ({ fileData }) => {
@@ -43,14 +43,6 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
             setUserEmail(session.user.email);
         }
     }, [session])
-
-    useEffect(() => {
-        if (userEmail != 'test@admin.com') {
-            if (fileData && fileData.length == 0) {
-                getFiles();
-            }
-        }
-    }, [userEmail])
 
     useEffect(() => {
         dispatch(setPageTitle('Folders'));
@@ -69,30 +61,17 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
     const [recordsData, setRecordsData] = useState<FileData[]>([]);
     const [shareModal, setShareModal] = useState(false);
     const [search, setSearch] = useState('');
+    const { selectedChannel } = useChannel();
 
     useEffect(() => {
         setPage(1);
     }, [pageSize]);
-
-    const getFiles = () => {
-        getSelectedFiles(userEmail)
-            .then(response => {
-                // Handle successful response
-                setRecordsData(response.data);
-            })
-            .catch(error => {
-                // Handle error
-                console.error('Error fetching files:', error);
-            });
-    }
 
     useEffect(() => {
         const from = (page - 1) * pageSize;
         const to = from + pageSize;
         setRecordsData([...initialRecords.slice(from, to)]);
     }, [page, pageSize, initialRecords]);
-
-
 
     useEffect(() => {
         setInitialRecords(() => {
@@ -112,7 +91,7 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
         setRecordsData(selectedRecords);
         const fileIds = selectedRecords.map((record: { id: any; }) => record.id);
         const userEmail: string = session?.user?.email ?? 'test@admin.com';
-        processFiles(fileIds, userEmail);
+        processFiles(fileIds, userEmail, selectedChannel?.name);
     };
 
     // TODO: (Dev)
@@ -144,8 +123,20 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
         setRowData(updatedRowData);
         setInitialRecords(updatedInitialRecords);
         setRecordsData(updatedRecordsData);
-        deleteFile(idToDelete, userEmail);
+        deleteFile(idToDelete, userEmail, selectedChannel.name);
     };
+
+    const getFiles = () => {
+        setRecordsData(fileData);
+        setInitialRecords(sortBy(fileData, 'name'));
+        setRecordsData(fileData);
+    }
+
+    useEffect(() => {
+        if (userEmail != 'test@admin.com' && fileData.length === 0) {
+            getFiles();
+        }
+    }, [userEmail])
 
     if (status === "unauthenticated") {
         return <p>Access Denied</p>

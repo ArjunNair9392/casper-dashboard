@@ -36,22 +36,6 @@ const Dashboard = () => {
     const [userStatus, setUserStatus] = useState('');
     const { data: session, status } = useSession();
 
-    useEffect(() => {
-        getUserStatus();
-    }, []);
-
-    const getUserStatus = () => {
-        const userEmail: string = session?.user?.email ?? 'test@admin.com';
-        addUsers(userEmail, 'TestCompany')
-            .then(response => {
-                // Handle successful response
-                console.log({ response });
-            })
-            .catch(error => {
-                // Handle error
-                console.error('Error fetching files:', error);
-            });
-    }
 
 
     // totalVisitOptions

@@ -7,7 +7,7 @@ import { addChannel } from '@/services/addChannel';
 interface Channel {
     guid: string;
     name: string;
-    type: string;
+    selected: boolean;
 }
 
 interface AddChannelProps {
@@ -18,7 +18,6 @@ interface AddChannelProps {
 
 const AddChannel: React.FC<AddChannelProps> = ({ setCreateFolderModal, channelNames = [], setChannelNames }) => {
     const [channel, setChannel] = useState<string>('');
-    const [channelType, setChannelType] = useState<string>('');
     const [userEmail, setUserEmail] = useState<string>('');
     const [confirmShare, setConfirmShare] = useState(false);
     const { data: session, status } = useSession();
@@ -30,20 +29,6 @@ const AddChannel: React.FC<AddChannelProps> = ({ setCreateFolderModal, channelNa
     }, [session])
 
 
-    // useEffect(() => {
-    //     const userEmail: string = session?.user?.email ?? 'test@admin.com';
-    //     getShareUsers(userEmail)
-    //         .then(response => {
-    //             // Handle successful response
-    //             setExistingUsers(response.data.userIds);
-    //         })
-    //         .catch(error => {
-    //             // Handle error
-    //             console.error('Error fetching files:', error);
-    //         });
-    //     // setExistingUsers();
-    // }, []);
-
     const handleShare = () => {
         if (channel.length == 0) {
             alert('Add channel to create');
@@ -53,12 +38,12 @@ const AddChannel: React.FC<AddChannelProps> = ({ setCreateFolderModal, channelNa
     };
 
     const handleConfirmShare = () => {
-        addChannel('TestCompany', channel, userEmail).then(response => {
+        addChannel(channel, userEmail).then(response => {
             console.log(response);
         })
         if (setChannelNames) {
             const currentChannelNames = [...channelNames];
-            currentChannelNames.push({ guid: '1', name: channel, type: channelType });
+            currentChannelNames.push({ guid: '1', name: channel, selected: false });
             setChannelNames([...currentChannelNames]);
         }
         setConfirmShare(false);
@@ -77,23 +62,13 @@ const AddChannel: React.FC<AddChannelProps> = ({ setCreateFolderModal, channelNa
                     <IconX />
                 </button>
             </div>
-            <div className="px-5 py-3 border-b border-gray-200 dark:border-gray-600">
+            <div className="px-5 py-3">
                 <label htmlFor="channelName" className="italic mb-2 p-2">Enter channel name:</label>
                 <input
                     id="channelName"
                     type="text"
                     value={channel}
                     onChange={(e) => setChannel(e.target.value)}
-                    className="p-2 mb-2 mr-2 ml-2 border border-gray-300 rounded max-w-lg"
-                />
-            </div>
-            <div className="px-5 py-3 border-b border-gray-200 dark:border-gray-600">
-                <label htmlFor="channeltype" className="italic mb-2 p-2">Enter channel type:</label>
-                <input
-                    id="channeltype"
-                    type="text"
-                    value={channelType}
-                    onChange={(e) => setChannelType(e.target.value)}
                     className="p-2 mb-2 mr-2 ml-2 border border-gray-300 rounded max-w-lg"
                 />
             </div>

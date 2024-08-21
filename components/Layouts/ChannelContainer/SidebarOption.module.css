@@ -7,13 +7,13 @@
 
 .sidebarOption:hover {
     opacity: 0.9;
-   background-color: rgb(0 0 0 / 0.08);
+   /* background-color: rgb(0 0 0 / 0.08); */
 }
 
 .sidebarOption__icon {
     padding: 2px;
     font-size: 15px !important;
-    opacity: 0.6;
+    /* opacity: 0.6; */
 }
 
 .sidebarOption__channel {
@@ -27,11 +27,21 @@
 
 .sidebarOption>h3 {
     font-weight: 400;
-    opacity: 0.6;
+    /* opacity: 0.6; */
 }
 
 .sidebarOption__sub {
     margin-left: 10px;
+}
+
+.sidebarOption__selected {
+    background-color: #2f3136; 
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.sidebarOption__selected .sidebarOption__icon {
+    color: #7289da;
 }
 
 .isOnline>.MuiSvgIcon-root {

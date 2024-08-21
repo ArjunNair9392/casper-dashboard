@@ -10,7 +10,7 @@ const CompanyDetails = () => {
     const router = useRouter();
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('CompanyDetails'));
+        dispatch(setPageTitle('Company Details'));
     });
     const [formData, setFormData] = useState({
         company: '',

@@ -109,14 +109,14 @@ const Sidebar = () => {
                                             </div>
                                         </Link>
                                     </li>
-                                    <li className="nav-item">
-                                        <Link href="/other/contact-us" className="group">
+                                    {/* <li className="nav-item">
+                                        <Link href="/other/company-registration" className="group">
                                             <div className="flex items-center">
                                                 <IconMenuContacts className="shrink-0 group-hover:!text-primary" />
                                                 <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">{t('Contact us')}</span>
                                             </div>
                                         </Link>
-                                    </li>
+                                    </li> */}
                                     {/* <li className="nav-item">
                                         <Link href="/other/faq" className="group">
                                             <div className="flex items-center">

@@ -1,63 +1,67 @@
-import styles from './ChannelContainer.module.css';
-import { useState, useEffect, Fragment } from 'react';
+import { useEffect, useState } from 'react';
 import { SidebarOption } from './SidebarOption';
-import IconBook from '@/components/Icon/IconBook';
-import IconLock from '@/components/Icon/IconLock';
 import IconPlus from '@/components/Icon/IconPlus';
-import AddChannel from '@/components/AddChannel/AddChannel';
-import { Transition, Dialog } from '@headlessui/react';
+import { listChannelsForUser } from '@/services/listChannels';
+import styles from './ChannelContainer.module.css';
+import { useChannel } from '@/context/ChannelContext';
+import { useSession } from 'next-auth/react';
 
 interface Channel {
     guid: string;
     name: string;
-    type: string;
 }
 
 export const ChannelContainer = () => {
     const [channels, setChannels] = useState<Channel[]>([]);
-    const [user, setUser] = useState<{ displayName: string } | null>(null);
+    const { selectedChannel, setSelectedChannel } = useChannel();
+
+    const { data: session, status } = useSession();
+    const [userEmail, setUserEmail] = useState('test@admin.com');
+
 
     useEffect(() => {
-        const data = localStorage.getItem('user');
-        if (data) {
-            setUser(JSON.parse(data));
+        if (session?.user?.email) {
+            setUserEmail(session.user.email);
         }
+    }, [session])
 
-        // Set dummy data for channels and direct messages
-        setChannels([
-            { guid: '1', name: 'General', type: 'public' },
-            { guid: '1', name: 'gpt-tech', type: 'public' },
-            { guid: '2', name: 'tech101', type: 'private' },
-            { guid: '2', name: 'Casper AI help', type: 'private' },
-        ]);
-    }, []);
+    useEffect(() => {
+        const fetchChannels = async () => {
+            try {
+                const fetchedChannels = await listChannelsForUser(userEmail);
+                setChannels(fetchedChannels);
+                if (!selectedChannel && fetchedChannels.length > 0) {
+                    setSelectedChannel(fetchedChannels[0]);
+                }
+            } catch (error) {
+                console.error('Failed to fetch channels:', error);
+            }
+        };
+        if (userEmail != 'test@admin.com') {
+            fetchChannels();
+        }
+    }, [userEmail]);
 
     return (
-        <div className={`sidebar z-50 h-full min-h-screen w-[300px] shadow-[5px_0_25px_0_rgba(94,92,154,0.1)] transition-all duration-300 p-1 ` + styles.sidebar}>
+        <div className={`h-full min-h-screen w-[300px] transition-all duration-300 p-1 ` + styles.sidebar}>
             <div className={styles.sidebar__options}>
-                <SidebarOption Icon={IconBook} title="Channels" />
+                <h2 className="text-xl">Channels</h2>
                 <hr />
                 {channels.map((channel) =>
-                    channel.type === 'private' ? (
-                        <SidebarOption
-                            Icon={IconLock}
-                            title={channel.name}
-                            key={channel.guid}
-                            sub={styles.sidebarOption__sub}
-                        />
-                    ) : (
-                        <SidebarOption
-                            title={channel.name}
-                            key={channel.guid}
-                            sub={styles.sidebarOption__sub}
-                        />
-                    )
+                    <SidebarOption
+                        title={channel.name}
+                        key={channel.guid}
+                        sub={styles.sidebarOption__sub}
+                        channel={channel}
+                        userEmail={userEmail}
+                    />
                 )}
                 <SidebarOption
                     Icon={IconPlus}
                     title="Add Channel"
                     sub={styles.sidebarOption__sub}
                     addChannelOption
+                    userEmail={userEmail}
                 />
             </div>
         </div>

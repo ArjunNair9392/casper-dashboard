@@ -1,15 +1,14 @@
 import axios from 'axios';
 
-export const processFiles = async (fileIds: string[], userId: string) => {
+export const processFiles = async (file_ids: string[], user_email: string, channel_name: string) => {
     try {
         const data = {
-            fileIds: fileIds,
-            userId: userId
+            file_ids: file_ids,
+            channel_name: channel_name,
+            user_email: user_email
         };
 
-        const response = await axios.post('https://uploadservice-juzqocjfea-uc.a.run.app/processFiles', data);
-        // const response = await axios.post('http://192.168.1.69:8080/processFiles', data);
-
+        const response = await axios.post('https://uploadservice-2imgap5w2q-uc.a.run.app/process-files', data);
         if (response.status === 200) {
             console.log('Files processed successfully:', response.data);
         } else {

@@ -92,15 +92,18 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
         hasCalledGetFiles.current = true; // Mark as called
 
         const userEmail: string = session?.user?.email ?? 'test@admin.com';
-
         getListFiles(userEmail, code)
             .then(response => {
-                // Handle successful response
-                setInitialRecords(response.data);
+                if (Array.isArray(response.data)) {
+                    setInitialRecords(response.data);
+                } else {
+                    console.error('Unexpected data format:', response.data);
+                    setInitialRecords([]);
+                }
             })
             .catch(error => {
-                // Handle error
                 console.error('Error fetching files:', error);
+                setInitialRecords([]);
             });
     }
 
@@ -128,9 +131,13 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
     }, [pageSize]);
 
     useEffect(() => {
-        const from = (page - 1) * pageSize;
-        const to = from + pageSize;
-        setRecordsData([...initialRecords.slice(from, to)]);
+        if (initialRecords && initialRecords.length > 0) {
+            const from = (page - 1) * pageSize;
+            const to = from + pageSize;
+            setRecordsData([...initialRecords.slice(from, to)]);
+        } else {
+            setRecordsData([]);
+        }
     }, [page, pageSize, initialRecords]);
 
     useEffect(() => {
