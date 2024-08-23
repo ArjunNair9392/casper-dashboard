@@ -29,8 +29,8 @@ export const ChannelContainer = () => {
         const fetchChannels = async () => {
             try {
                 const fetchedChannels = await listChannelsForUser(userEmail);
-                setChannels(fetchedChannels);
-                if (!selectedChannel && fetchedChannels.length > 0) {
+                setChannels(fetchedChannels?.channel_names);
+                if (!selectedChannel && fetchedChannels?.channel_names.length > 0) {
                     setSelectedChannel(fetchedChannels[0]);
                 }
             } catch (error) {
@@ -47,7 +47,7 @@ export const ChannelContainer = () => {
             <div className={styles.sidebar__options}>
                 <h2 className="text-xl">Channels</h2>
                 <hr />
-                {channels.map((channel) =>
+                {channels.length && channels?.map((channel) =>
                     <SidebarOption
                         title={channel.name}
                         key={channel.guid}

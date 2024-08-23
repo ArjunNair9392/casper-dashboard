@@ -114,7 +114,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
     const handleConfirmFilesSave = () => {
         showAlert();
         const currentSelectRecords = selectedRecords;
-        currentSelectRecords.forEach(row => {
+        currentSelectRecords.forEach((row: { docName: any; name: any; }) => {
             row.docName = row.name;
         });
         onSave(selectedRecords);

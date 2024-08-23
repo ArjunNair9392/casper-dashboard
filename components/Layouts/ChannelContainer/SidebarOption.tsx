@@ -25,13 +25,13 @@ export const SidebarOption: FC<SidebarOptionProps> = ({
     const [createFolderModal, setCreateFolderModal] = useState(false);
     const { selectedChannel, setSelectedChannel } = useChannel();
 
-
+    console.log(selectedChannel);
     const selectChannel = async () => {
         if (channel) {
             setSelectedChannel(channel);
             try {
-                const files = await listFilesFromChannel(userEmail, selectChannel.name)
-                console.log(files);
+                const files = await listFilesFromChannel(userEmail, selectedChannel?.toString())
+                console.log(files); /*TODO: PASS FILES TO LIST FILES COMPONENT */
             } catch (error) {
                 console.error('Failed to fetch files:', error);
             }
@@ -49,8 +49,7 @@ export const SidebarOption: FC<SidebarOptionProps> = ({
         >
             {Icon && <Icon className={styles.sidebarOption__icon} />}
             <h3 className={styles.sidebarOption__channel}>
-                {addChannelOption ? title : `<span className={styles.sidebarOption__hash}>#</span>${title}`
-                }
+                {addChannelOption ? `Add channel` : <span className={styles.sidebarOption__hash}>#{channel?.toString()}</span>}
             </h3>
             <Transition appear show={createFolderModal} as={Fragment}>
                 <Dialog as="div" open={createFolderModal} onClose={() => setCreateFolderModal(false)}>

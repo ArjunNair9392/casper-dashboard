@@ -23,9 +23,9 @@ function Index() {
             if (session && session.user && userEmail != 'test@admin.com') {
                 try {
                     const userData = await getUser(userEmail);
-                    setIsAdmin(userData !== 'FAILURE');
+                    setIsAdmin(userData.success);
 
-                    if (!userData.admin) {
+                    if (!userData.success) {
                         router.push('other/company-registration');
                     }
                 } catch (error) {
@@ -35,7 +35,7 @@ function Index() {
             }
         };
 
-        //checkAdminStatus();
+        checkAdminStatus();
     }, [session, router, userEmail]);
 
     // if (status === 'loading' || isAdmin === null) return <div>Loading...</div>;

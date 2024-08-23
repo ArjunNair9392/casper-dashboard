@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { googleAuthURL } from "./constants";
 
 const getFromLocalStorage = (key: string) => {
@@ -8,11 +7,11 @@ const getFromLocalStorage = (key: string) => {
     return localStorage.getItem(key)
 }
 
-const setLocalStorage = (key: string, value:string) => {
+const setLocalStorage = (key: string, value: string) => {
     if (!key || typeof window === 'undefined') {
         return ""
     }
-    return localStorage.setItem(key,value)
+    return localStorage.setItem(key, value)
 }
 
 const refreshCode = getFromLocalStorage('code');

@@ -53,7 +53,7 @@ const CompanyDetails = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            await registerCompany(formData);
+            const response = await registerCompany(formData);
             router.push('/usable/folder_path');
         } catch (error) {
             console.error('Error:', error);

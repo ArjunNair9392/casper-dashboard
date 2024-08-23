@@ -152,12 +152,6 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
                             <div>
                                 <ListFiles onSave={handleListFilesSave} />
                             </div>
-                            <div>
-                                <button type="button" className="btn btn-primary" onClick={() => { setShareModal(true) }}>
-                                    <IconShare className="ltr:mr-2 rtl:ml-2" />
-                                    Share
-                                </button>
-                            </div>
                         </div>
                         <Transition appear show={shareModal} as={Fragment}>
                             <Dialog as="div" open={shareModal} onClose={() => setShareModal(false)}>
@@ -172,23 +166,6 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
                                 >
                                     <div className="fixed inset-0" />
                                 </Transition.Child>
-                                <div className="fixed inset-0 z-[999] overflow-y-auto bg-[black]/60">
-                                    <div className="flex min-h-screen items-center justify-center px-4">
-                                        <Transition.Child
-                                            as={Fragment}
-                                            enter="ease-out duration-300"
-                                            enterFrom="opacity-0 scale-95"
-                                            enterTo="opacity-100 scale-100"
-                                            leave="ease-in duration-200"
-                                            leaveFrom="opacity-100 scale-100"
-                                            leaveTo="opacity-0 scale-95"
-                                        >
-                                            <Dialog.Panel as="div" className="panel my-8 w-full max-w-xl overflow-hidden rounded-lg border-0 p-0 text-black dark:text-white-dark">
-                                                <ShareUsers setShareModal={setShareModal} />
-                                            </Dialog.Panel>
-                                        </Transition.Child>
-                                    </div>
-                                </div>
                             </Dialog>
                         </Transition>
                         <div className="relative">
