@@ -55,6 +55,13 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
     const isInitialMount = useRef(true);
     const hasCalledGetFiles = useRef(false); // Ref to track if getFiles has been called
 
+    const [userEmail, setUserEmail] = useState('test@admin.com');
+    useEffect(() => {
+        if (session?.user?.email) {
+            setUserEmail(session.user.email);
+        }
+    }, [session])
+
     const generateGoogleAuthURL = () => {
         setListFilesModal(true);
         if (refreshCode && refreshCode.length > 0) {
@@ -71,7 +78,9 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
             if (code) {
                 window.localStorage.setItem('code', code);
                 router.push('/usable/folder_path');
-                getFiles(code);
+                if (userEmail != 'test@admin.com') {
+                    getFiles(code);
+                }
             }
             isInitialMount.current = false;
         }
@@ -91,11 +100,10 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
         }
         hasCalledGetFiles.current = true; // Mark as called
 
-        const userEmail: string = session?.user?.email ?? 'test@admin.com';
         getListFiles(userEmail, code)
             .then(response => {
-                if (Array.isArray(response.data)) {
-                    setInitialRecords(response.data);
+                if (Array.isArray(response)) {
+                    setInitialRecords(response);
                 } else {
                     console.error('Unexpected data format:', response.data);
                     setInitialRecords([]);

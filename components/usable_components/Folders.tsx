@@ -91,7 +91,7 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
         setRecordsData(selectedRecords);
         const fileIds = selectedRecords.map((record: { id: any; }) => record.id);
         const userEmail: string = session?.user?.email ?? 'test@admin.com';
-        processFiles(fileIds, userEmail, selectedChannel?.name);
+        processFiles(fileIds, userEmail, selectedChannel.toString());
     };
 
     // TODO: (Dev)
@@ -123,7 +123,7 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
         setRowData(updatedRowData);
         setInitialRecords(updatedInitialRecords);
         setRecordsData(updatedRecordsData);
-        deleteFile(idToDelete, userEmail, selectedChannel.name);
+        deleteFile(idToDelete, userEmail, selectedChannel.toString());
     };
 
     const getFiles = () => {
