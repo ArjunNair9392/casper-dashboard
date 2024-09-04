@@ -13,11 +13,7 @@ interface CompanyFormData {
 export const registerCompany = async (formData: CompanyFormData) => {
     try {
         const response = await axios.post('https://registrationservice-2imgap5w2q-uc.a.run.app/company-registration', formData);
-        console.log(response);
-        if (response.status !== 200 || response.data.status !== 'success') {
-            throw new Error('Failed to register');
-        }
-        return response; // Return the response object
+        return response;
     } catch (error) {
         console.error('Error registering:', error);
         throw error;

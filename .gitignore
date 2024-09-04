@@ -19,3 +19,5 @@ npm-debug.log*
 
 .env
 settings.json
+.DS_Store
+.env.local

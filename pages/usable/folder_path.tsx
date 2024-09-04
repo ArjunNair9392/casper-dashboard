@@ -20,6 +20,7 @@ const FolderPath = () => {
     const { data: session, status } = useSession();
     const [userEmail, setUserEmail] = useState('test@admin.com');
     const { selectedChannel, setSelectedChannel } = useChannel();
+    const [disableListFiles, setDisableListFiles] = useState<boolean>(false);
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -28,28 +29,38 @@ const FolderPath = () => {
     }, [session])
 
     useEffect(() => {
-        if (userEmail != 'test@admin.com') {
-            if (fileData && fileData.length == 0) {
-                getFiles();
-            }
+        if (selectedChannel && selectedChannel.guid === 'default-guid') {
+            setDisableListFiles(true);
+        } else {
+            setDisableListFiles(false);
         }
-    }, [userEmail])
+    }, [selectedChannel]);
+
+    // useEffect(() => {
+    //     if (userEmail != 'test@admin.com' && !disableListFiles) {
+    //         if (fileData && fileData.length == 0) {
+    //             getFiles();
+    //         }
+    //     }
+    // }, [userEmail, disableListFiles])
 
     const getFiles = () => {
-        listFilesFromChannel(userEmail, selectedChannel.name)
-            .then(response => {
-                setFileData(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching files:', error);
-            });
+        if (!disableListFiles) {
+            listFilesFromChannel(userEmail, selectedChannel.name)
+                .then(response => {
+                    setFileData(response.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching files:', error);
+                });
+        }
     }
 
     return (
         <div className='flex'>
-            <ChannelContainer />
+            <ChannelContainer fileData={fileData} setFileData={() => setFileData} />
             <div className="folder-content" style={{ 'width': '100%' }}>
-                <Folders fileData={fileData} />
+                <Folders fileData={fileData} disabled={disableListFiles} />
             </div>
         </div>
     )

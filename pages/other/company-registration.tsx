@@ -19,7 +19,6 @@ const CompanyRegistration = () => {
         dispatch(setPageTitle('Company Registration'));
     }, [dispatch]);
 
-    // Adjust the formData to match the API's expected format
     const [formData, setFormData] = useState({
         company: '',
         admin_email: '',
@@ -41,7 +40,6 @@ const CompanyRegistration = () => {
         try {
             const response = await registerCompany(formData);
             if (response && response.status === 200) {
-                // Handle successful registration, e.g., redirect to dashboard
                 router.push('/');
             } else {
                 console.error('Registration failed', response.statusText);
@@ -67,8 +65,6 @@ const CompanyRegistration = () => {
     useEffect(() => {
         setLocale(localStorage.getItem('i18nextLng') || themeConfig.locale);
     }, [themeConfig.locale, dispatch]);
-
-    const { t, i18n } = useTranslation();
 
     return (
         <div>

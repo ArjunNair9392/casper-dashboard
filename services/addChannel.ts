@@ -9,11 +9,7 @@ export const addChannel = async (channel_name: string, userId: string) => {
 
         const response = await axios.post('https://registrationservice-2imgap5w2q-uc.a.run.app/add-channel', data);
 
-        if (response.status === 200) {
-            console.log('added channel successfully:', response.data);
-        } else {
-            console.error('Failed to process files:', response.statusText);
-        }
+        return response.data;
     } catch (error) {
         console.error('Error processing files:', error);
     }

@@ -15,7 +15,7 @@ const ChannelContext = createContext<ChannelContextProps | undefined>(undefined)
 export const ChannelProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const [selectedChannel, setSelectedChannel] = useState<Channel>({
         guid: 'default-guid',
-        name: 'CasperAI',       // Default name
+        name: 'CasperAI',
     });
 
     return (

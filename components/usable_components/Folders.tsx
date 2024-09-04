@@ -17,8 +17,9 @@ import IconCircleCheck from '@/components/Icon/IconCircleCheck';
 import ShareUsers from '@/components/ShareUsers/ShareUsers';
 import { getSelectedFiles } from '@/services/selectedFiles';
 import { useChannel } from '@/context/ChannelContext';
+import styles from './Folders.module.css';
 
-interface FileData {
+export interface FileData {
     id: string;
     docId: string;
     docName: string;
@@ -30,9 +31,10 @@ interface FileData {
 
 interface FoldersProps {
     fileData: FileData[];
+    disabled: boolean;
 }
 
-const Folders: React.FC<FoldersProps> = ({ fileData }) => {
+const Folders: React.FC<FoldersProps> = ({ fileData, disabled }) => {
     const dispatch = useDispatch();
     const { data: session, status } = useSession();
     const [userEmail, setUserEmail] = useState('test@admin.com');
@@ -86,6 +88,7 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
     }, [search]);
 
     const handleListFilesSave = (selectedRecords: any) => {
+        if (disabled) return;
         setRowData(selectedRecords)
         setInitialRecords(sortBy(selectedRecords, 'name'));
         setRecordsData(selectedRecords);
@@ -93,11 +96,6 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
         const userEmail: string = session?.user?.email ?? 'test@admin.com';
         processFiles(fileIds, userEmail, selectedChannel.toString());
     };
-
-    // TODO: (Dev)
-    // const getFileName = () => {
-    //     return recordsData.name || recordsData.docName
-    // };
 
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
         columnAccessor: 'name',
@@ -110,6 +108,7 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
     }, [sortStatus]);
 
     const handleDelete = (idToDelete: string) => {
+        if (disabled) return;
         // Filter out the item to delete from rowData
         const updatedRowData = rowData.filter(item => item.id !== idToDelete);
 
@@ -143,7 +142,7 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
     }
 
     return (
-        <div>
+        <div className={`folders-component ${disabled ? styles.disabled : ''}`}>
             <div className="panel">
                 <div className="flex flex-wrap items-center justify-between gap-5 mb-5">
                     <h2 className="text-xl">Files</h2>
@@ -169,8 +168,8 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
                             </Dialog>
                         </Transition>
                         <div className="relative">
-                            <input type="text" placeholder="Search Folders" className="peer form-input py-2 ltr:pr-11 rtl:pl-11" value={search} onChange={(e) => setSearch(e.target.value)} />
-                            <button type="button" className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
+                            <input type="text" placeholder="Search Folders" className="peer form-input py-2 ltr:pr-11 rtl:pl-11" value={search} onChange={(e) => setSearch(e.target.value)} disabled={disabled} />
+                            <button type="button" className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]" disabled={disabled}>
                                 <IconSearch className="mx-auto" />
                             </button>
                         </div>
@@ -179,8 +178,9 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
                 <div className="datatables">
                     {isMounted && (
                         <DataTable
-                            className="table-hover whitespace-nowrap"
+                            className={`table-hover whitespace-nowrap ${disabled ? styles.disabled : ''}`}
                             records={recordsData}
+                            noRecordsText={"No files added to be processed"}
                             columns={[
                                 {
                                     accessor: 'name',
@@ -202,7 +202,7 @@ const Folders: React.FC<FoldersProps> = ({ fileData }) => {
                                     titleClassName: '!text-center action-column',
                                     render: ({ docId }) => (
                                         <div className="mx-auto flex w-max items-center gap-2"
-                                            onClick={() => handleDelete(docId)}
+                                            onClick={disabled ? undefined : () => handleDelete(docId)}
                                         >
                                             <Tippy content="Delete">
                                                 <IconTrashLines />

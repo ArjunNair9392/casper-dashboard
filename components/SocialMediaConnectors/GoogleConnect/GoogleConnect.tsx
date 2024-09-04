@@ -16,19 +16,25 @@ const showAlert = async () => {
 
 const GoogleConnect: React.FC = () => {
     const [isConnected, setIsConnected] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const refreshToken = localStorage.getItem('code');
         setIsConnected(!!refreshToken);
     }, []);
 
-    const connectGoogleAccount = () => {
+    const connectGoogleAccount = async () => {
         if (isConnected) {
             return;
         } else {
-            getGoogleRefreshCode();
-            setIsConnected(true);
-            showAlert();
+            setIsLoading(true);
+            await getGoogleRefreshCode();
+            setIsLoading(false);
+            const refreshToken = localStorage.getItem('code');
+            if (refreshToken) {
+                setIsConnected(true);
+                showAlert();
+            }
         }
     };
 
@@ -36,7 +42,7 @@ const GoogleConnect: React.FC = () => {
         <div className="mb-5">
             <button type="button" className="btn btn-secondary" onClick={connectGoogleAccount}>
                 <IconGoogle />
-                {isConnected ? 'Connected' : 'Connect with Google'}
+                {isLoading ? 'Connecting...' : isConnected ? 'Connected' : 'Connect with Google'}
             </button>
         </div>
     );

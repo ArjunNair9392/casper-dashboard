@@ -2,6 +2,7 @@
     display: flex;
     align-items: center;
     padding-left: 2px;
+    margin-top: 5px;
     cursor: pointer;
 }
 
@@ -14,10 +15,6 @@
     padding: 2px;
     font-size: 15px !important;
     /* opacity: 0.6; */
-}
-
-.sidebarOption__channel {
-    padding: 10px 0;
 }
 
 .sidebarOption__hash {
