@@ -1,12 +1,12 @@
 import styles from './SidebarOption.module.css';
-import { FC, Fragment, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { useChannel } from '@/context/ChannelContext';
 
 interface SidebarOptionProps {
     Icon?: React.ComponentType<{ className?: string }>;
     title?: string;
     sub?: string;
-    channel?: { guid: string, name: string };
+    channel?: { guid: string, name: string, selected?: boolean };
     userEmail: string;
     selectChannel: () => void;
 }
@@ -17,8 +17,7 @@ export const SidebarOption: FC<SidebarOptionProps> = ({
     channel,
     selectChannel
 }) => {
-    const { selectedChannel, setSelectedChannel } = useChannel();
-
+    const { selectedChannel } = useChannel();
 
     return (
         <div
@@ -27,7 +26,7 @@ export const SidebarOption: FC<SidebarOptionProps> = ({
         >
             {Icon && <Icon className={styles.sidebarOption__icon} />}
             <h3 className={styles.sidebarOption__channel}>
-                <span className={styles.sidebarOption__hash}>#{channel?.toString()}</span>
+                <span className={styles.sidebarOption__hash}>#{channel?.name}</span>
             </h3>
         </div>
     );

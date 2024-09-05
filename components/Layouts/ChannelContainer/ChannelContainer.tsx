@@ -21,9 +21,10 @@ const showAlert = async () => {
     });
 };
 
-interface Channel {
+export interface Channel {
     guid: string;
     name: string;
+    selected: boolean; // Ensure this property is present
 }
 
 interface ChannelContainerProps {
@@ -49,28 +50,53 @@ export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, se
         const fetchChannels = async () => {
             try {
                 const fetchedChannels = await listChannelsForUser(userEmail);
-                setChannels(fetchedChannels?.channel_names);
-                if (fetchedChannels.length < 1) {
-                    showAlert();
+
+                if (fetchedChannels && fetchedChannels.channel_names) {
+                    const formattedChannels = fetchedChannels.channel_names.map((name: string) => ({
+                        guid: `${name}-guid`,
+                        name: name,
+                        selected: false, // Initialize the selected property
+                    }));
+
+                    setChannels(formattedChannels);
+
+                    if (formattedChannels.length > 0) {
+                        setSelectedChannel(formattedChannels[0]);
+                    }
+
+                    if (formattedChannels.length < 1) {
+                        showAlert();
+                    }
                 }
             } catch (error) {
                 console.error('Failed to fetch channels:', error);
             }
         };
-        if (userEmail != 'test@admin.com') {
+
+        if (userEmail !== 'test@admin.com') {
             fetchChannels();
         }
     }, [userEmail]);
 
     useEffect(() => {
-        if (channels.length > 0) {
-            setSelectedChannel(channels[0]);
+        if (channels.length > 0 && !selectedChannel) {
+            handleSelectChannel(channels[0]);
         }
     }, [channels]);
 
+    const handleSelectChannel = (channel: Channel) => {
+        // Mark the clicked channel as selected and others as not selected
+        const updatedChannels = channels.map((ch) => ({
+            ...ch,
+            selected: ch.guid === channel.guid,
+        }));
+        setChannels(updatedChannels);
+        setSelectedChannel(channel);
+    };
+
     useEffect(() => {
         if (selectedChannel && selectedChannel.guid != 'default-guid') {
-            selectChannel();
+            selectChannelFiles();
         }
     }, [selectedChannel]);
 
@@ -78,15 +104,19 @@ export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, se
         setAddChannelModal(true);
     };
 
-    const selectChannel = async () => {
+    const selectChannelFiles = async () => {
         try {
-            const seletedChannelName = selectedChannel?.toString();
-            const filesFromChannel = await listFilesFromChannel(userEmail, seletedChannelName);
+            const selectedChannelName = selectedChannel?.toString();
+            const filesFromChannel = await listFilesFromChannel(userEmail, selectedChannelName);
             setFileData([...filesFromChannel?.files]);
-
         } catch (error) {
             console.error('Failed to fetch files:', error);
         }
+    };
+
+
+    const updateChannels = (updatedChannels: Channel[]) => {
+        setChannels(updatedChannels);
     };
 
     return (
@@ -94,15 +124,15 @@ export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, se
             <div className={styles.sidebar__options}>
                 <h2 className="text-xl">Channels</h2>
                 <hr />
-                {channels.length > 0 && channels?.map((channel, idx) =>
+                {channels.length > 0 && channels.map((channel, idx) => (
                     <SidebarOption
                         key={idx}
                         sub={styles.sidebarOption__sub}
-                        channel={channel}
+                        channel={channel} // Pass the properly formatted channel object
                         userEmail={userEmail}
-                        selectChannel={selectChannel}
+                        selectChannel={() => setSelectedChannel(channel)} // Correctly set selected channel
                     />
-                )}
+                ))}
                 <h3 className={styles.sidebarOption__channel} onClick={addChannel}>
                     <div className={styles.sidebarOption__addChannel}><IconPlus className={styles.sidebar__icon} /><span>Add channel</span></div>
                 </h3>
@@ -131,7 +161,12 @@ export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, se
                                     leaveTo="opacity-0 scale-95"
                                 >
                                     <Dialog.Panel as="div" className="panel my-8 w-full max-w-xl overflow-hidden rounded-lg border-0 p-0 text-black dark:text-white-dark">
-                                        <AddChannel setCreateFolderModal={setAddChannelModal} channelNames={[]} setChannelNames={() => { }} />
+                                        <AddChannel
+                                            setCreateFolderModal={setAddChannelModal}
+                                            channelNames={channels}
+                                            setChannelNames={setChannels}
+                                            onUpdateChannels={updateChannels}
+                                        />
                                     </Dialog.Panel>
                                 </Transition.Child>
                             </div>

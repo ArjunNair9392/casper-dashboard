@@ -4,19 +4,15 @@ import ConfirmationModal from '../ConfirmationModal';
 import { useSession } from "next-auth/react";
 import { addChannel } from '@/services/addChannel';
 import { listChannelsForUser } from '@/services/listChannels';
+import { Channel } from '../Layouts/ChannelContainer/ChannelContainer';
 
-interface Channel {
-    guid: string;
-    name: string;
-    selected: boolean;
-}
 
 interface AddChannelProps {
     setCreateFolderModal: React.Dispatch<React.SetStateAction<boolean>>;
     channelNames?: Channel[];
     setChannelNames?: React.Dispatch<React.SetStateAction<Channel[]>>;
     onUpdateChannels?: (channels: Channel[]) => void; // Callback to update channels in the parent component
-    onSelectChannel?: (channel: Channel) => void; // Callback to set the selected channel
+    onSelectChannel?: (channel: Channel) => void;
 }
 
 const AddChannel: React.FC<AddChannelProps> = ({
@@ -54,10 +50,10 @@ const AddChannel: React.FC<AddChannelProps> = ({
                 const updatedChannels = await listChannelsForUser(userEmail);
 
                 if (onUpdateChannels) {
-                    onUpdateChannels(updatedChannels);
+                    onUpdateChannels(updatedChannels.channel_names);
                 }
 
-                const newChannel = updatedChannels.find((ch: any) => ch.name === channel);
+                const newChannel = updatedChannels.channel_names.find((ch: any) => ch.name === channel);
                 if (newChannel && onSelectChannel) {
                     onSelectChannel(newChannel);
                 }

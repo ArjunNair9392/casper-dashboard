@@ -32,9 +32,12 @@
 }
 
 .sidebarOption__selected {
-    background-color: #7289da;
+    /* background-color: #7289da;
     color: #ffffff;
-    font-weight: bold;
+    font-weight: bold; */
+    color: #000;
+    background-color: #dfe6e9; /* Example color */
+    font-weight: 700;
 }
 
 .sidebarOption__selected .sidebarOption__icon {
