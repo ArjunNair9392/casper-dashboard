@@ -50,7 +50,7 @@ export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, se
             try {
                 const fetchedChannels = await listChannelsForUser(userEmail);
                 setChannels(fetchedChannels?.channel_names);
-                if (fetchedChannels.length == 0) {
+                if (fetchedChannels.length < 1) {
                     showAlert();
                 }
             } catch (error) {
@@ -94,9 +94,9 @@ export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, se
             <div className={styles.sidebar__options}>
                 <h2 className="text-xl">Channels</h2>
                 <hr />
-                {channels.length > 0 && channels?.map((channel) =>
+                {channels.length > 0 && channels?.map((channel, idx) =>
                     <SidebarOption
-                        key={channel.guid}
+                        key={idx}
                         sub={styles.sidebarOption__sub}
                         channel={channel}
                         userEmail={userEmail}

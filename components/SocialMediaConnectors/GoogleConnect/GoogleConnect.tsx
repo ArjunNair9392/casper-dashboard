@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './GoogleConnect.module.css';
-import { getGoogleRefreshCode } from '@/helpers/signInWithGoogle';
+import { getGoogleRefreshCode, setGoogleRefreshCode } from '@/helpers/signInWithGoogle';
 import IconGoogle from '@/components/Icon/IconGoogle';
 import Swal from 'sweetalert2';
 
@@ -19,6 +19,10 @@ const GoogleConnect: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
+        // Check if there's a code in the URL and store it
+        setGoogleRefreshCode();
+
+        // Check localStorage for the code
         const refreshToken = localStorage.getItem('code');
         setIsConnected(!!refreshToken);
     }, []);
@@ -41,8 +45,8 @@ const GoogleConnect: React.FC = () => {
     return (
         <div className="mb-5">
             <button type="button" className="btn btn-secondary" onClick={connectGoogleAccount}>
-                <IconGoogle />
-                {isLoading ? 'Connecting...' : isConnected ? 'Connected' : 'Connect with Google'}
+                <p className="mr-2"><IconGoogle /></p>
+                {isLoading ? 'Connecting...' : isConnected ? 'Connected' : 'Connect your Google Drive account'}
             </button>
         </div>
     );

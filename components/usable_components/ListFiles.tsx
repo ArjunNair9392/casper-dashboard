@@ -36,6 +36,26 @@ const showAlert = async () => {
     });
 };
 
+const showFilesLoadingAlert = async () => {
+    Swal.fire({
+        icon: 'info',
+        title: 'Please wait',
+        text: 'We are fetching your files from Google Drive.',
+        padding: '2em',
+        customClass: 'sweet-alerts',
+    });
+};
+
+const showFilesLoadingFailedAlert = async () => {
+    Swal.fire({
+        icon: 'error',
+        title: 'Fetching files',
+        text: 'Oops! There was an error while fetching your files from Google Drive. Please try again later.',
+        padding: '2em',
+        customClass: 'sweet-alerts',
+    });
+};
+
 const ListFiles: React.FC<Props> = ({ onSave }) => {
     const router = useRouter();
     const { data: session, status } = useSession();
@@ -56,6 +76,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
     const hasCalledGetFiles = useRef(false); // Ref to track if getFiles has been called
 
     const [userEmail, setUserEmail] = useState('test@admin.com');
+
     useEffect(() => {
         if (session?.user?.email) {
             setUserEmail(session.user.email);
@@ -93,6 +114,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
     }, [initialRecords]);
 
     const getFiles = (code: string) => {
+        showFilesLoadingAlert();
         // Guard clause to prevent multiple calls
         if (hasCalledGetFiles.current) {
             console.log('getFiles already called, skipping...');
@@ -110,6 +132,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
                 }
             })
             .catch(error => {
+                showFilesLoadingFailedAlert();
                 console.error('Error fetching files:', error);
                 setInitialRecords([]);
             });

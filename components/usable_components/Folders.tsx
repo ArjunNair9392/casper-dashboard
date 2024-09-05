@@ -38,7 +38,16 @@ const Folders: React.FC<FoldersProps> = ({ fileData, disabled }) => {
     const dispatch = useDispatch();
     const { data: session, status } = useSession();
     const [userEmail, setUserEmail] = useState('test@admin.com');
-
+    const [page, setPage] = useState(1);
+    const PAGE_SIZES = [10, 20, 30, 50, 100];
+    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
+    const [rowData, setRowData] = useState<FileData[]>([]);
+    const [initialRecords, setInitialRecords] = useState<FileData[]>([]);
+    const [recordsData, setRecordsData] = useState<FileData[]>([]);
+    const [shareModal, setShareModal] = useState(false);
+    const [search, setSearch] = useState('');
+    const { selectedChannel } = useChannel();
+    const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -50,20 +59,9 @@ const Folders: React.FC<FoldersProps> = ({ fileData, disabled }) => {
         dispatch(setPageTitle('Folders'));
     });
 
-    const [isMounted, setIsMounted] = useState(false);
     useEffect(() => {
         setIsMounted(true);
     });
-
-    const [page, setPage] = useState(1);
-    const PAGE_SIZES = [10, 20, 30, 50, 100];
-    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-    const [rowData, setRowData] = useState<FileData[]>([]);
-    const [initialRecords, setInitialRecords] = useState<FileData[]>([]);
-    const [recordsData, setRecordsData] = useState<FileData[]>([]);
-    const [shareModal, setShareModal] = useState(false);
-    const [search, setSearch] = useState('');
-    const { selectedChannel } = useChannel();
 
     useEffect(() => {
         setPage(1);

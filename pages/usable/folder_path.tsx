@@ -4,6 +4,7 @@ import { ChannelContainer } from '@/components/Layouts/ChannelContainer/ChannelC
 import { listFilesFromChannel } from '@/services/listFilesFromChannel';
 import { useSession } from 'next-auth/react';
 import { useChannel } from '@/context/ChannelContext';
+import GoogleConnect from '@/components/SocialMediaConnectors/GoogleConnect/GoogleConnect';
 
 interface FileData {
     id: string;
@@ -21,6 +22,7 @@ const FolderPath = () => {
     const [userEmail, setUserEmail] = useState('test@admin.com');
     const { selectedChannel, setSelectedChannel } = useChannel();
     const [disableListFiles, setDisableListFiles] = useState<boolean>(false);
+    const [refreshCode, setRefreshCode] = useState<string | null>(null);
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -36,31 +38,21 @@ const FolderPath = () => {
         }
     }, [selectedChannel]);
 
-    // useEffect(() => {
-    //     if (userEmail != 'test@admin.com' && !disableListFiles) {
-    //         if (fileData && fileData.length == 0) {
-    //             getFiles();
-    //         }
-    //     }
-    // }, [userEmail, disableListFiles])
+    useEffect(() => {
+        const code = typeof window !== "undefined" ? window.localStorage.getItem('code') : null;
+        setRefreshCode(code);
+    }, []);
 
-    const getFiles = () => {
-        if (!disableListFiles) {
-            listFilesFromChannel(userEmail, selectedChannel.name)
-                .then(response => {
-                    setFileData(response.data);
-                })
-                .catch(error => {
-                    console.error('Error fetching files:', error);
-                });
-        }
-    }
 
     return (
         <div className='flex'>
-            <ChannelContainer fileData={fileData} setFileData={() => setFileData} />
+            <ChannelContainer fileData={fileData} setFileData={setFileData} />
             <div className="folder-content" style={{ 'width': '100%' }}>
-                <Folders fileData={fileData} disabled={disableListFiles} />
+                {(refreshCode && refreshCode.length > 0) ?
+                    <Folders fileData={fileData} disabled={disableListFiles} />
+                    :
+                    <div style={{ 'display': 'flex', 'justifyContent': 'center', 'alignContent': 'center', 'height': '100%' }}><GoogleConnect /></div>
+                }
             </div>
         </div>
     )
