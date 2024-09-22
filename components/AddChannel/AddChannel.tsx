@@ -43,19 +43,26 @@ const AddChannel: React.FC<AddChannelProps> = ({
 
     const handleConfirmShare = async () => {
         try {
-            const response = await addChannel(channel, userEmail); // Await the promise to get the response
+            const response = await addChannel(channel, userEmail);
 
             if (response && response.success) {
                 // Fetch the updated list of channels
                 const updatedChannels = await listChannelsForUser(userEmail);
 
                 if (onUpdateChannels) {
-                    onUpdateChannels(updatedChannels.channel_names);
-                }
+                    const formattedChannels = updatedChannels.channel_names.map((name: string) => ({
+                        guid: `${name}-guid`,
+                        name,
+                        selected: false,
+                    }));
 
-                const newChannel = updatedChannels.channel_names.find((ch: any) => ch.name === channel);
-                if (newChannel && onSelectChannel) {
-                    onSelectChannel(newChannel);
+                    onUpdateChannels(formattedChannels); // Update channels state
+
+                    // Set the newly added channel as the default selected channel
+                    const newChannel = formattedChannels.find((ch: { name: string; }) => ch.name === channel);
+                    if (newChannel && onSelectChannel) {
+                        onSelectChannel(newChannel); // Set the newly added channel as selected
+                    }
                 }
             } else {
                 console.error('Failed to add channel:', response.message);

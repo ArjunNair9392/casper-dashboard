@@ -9,8 +9,12 @@ import { signIn } from "next-auth/react";
 const Registration = () => {
     const router = useRouter();
 
-    const handleClick = () => {
-        signIn("google");
+    const handleClick = async () => {
+        try {
+            await signIn("google", { callbackUrl: '/usable/folder_path' });
+        } catch (error) {
+            console.error('Error during Google Sign-in:', error);
+        }
     };
 
     const submitForm = (e: any) => {

@@ -54,17 +54,14 @@ export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, se
                 if (fetchedChannels && fetchedChannels.channel_names) {
                     const formattedChannels = fetchedChannels.channel_names.map((name: string) => ({
                         guid: `${name}-guid`,
-                        name: name,
-                        selected: false, // Initialize the selected property
+                        name,
+                        selected: false,
                     }));
 
-                    setChannels(formattedChannels);
-
+                    setChannels(formattedChannels); // Set the channels here directly
                     if (formattedChannels.length > 0) {
                         setSelectedChannel(formattedChannels[0]);
-                    }
-
-                    if (formattedChannels.length < 1) {
+                    } else {
                         showAlert();
                     }
                 }
@@ -85,7 +82,6 @@ export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, se
     }, [channels]);
 
     const handleSelectChannel = (channel: Channel) => {
-        // Mark the clicked channel as selected and others as not selected
         const updatedChannels = channels.map((ch) => ({
             ...ch,
             selected: ch.guid === channel.guid,
@@ -106,14 +102,17 @@ export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, se
 
     const selectChannelFiles = async () => {
         try {
-            const selectedChannelName = selectedChannel?.toString();
+            const selectedChannelName = selectedChannel?.name;
+            if (!selectedChannelName) {
+                console.error('No channel selected');
+                return;
+            }
             const filesFromChannel = await listFilesFromChannel(userEmail, selectedChannelName);
             setFileData([...filesFromChannel?.files]);
         } catch (error) {
             console.error('Failed to fetch files:', error);
         }
     };
-
 
     const updateChannels = (updatedChannels: Channel[]) => {
         setChannels(updatedChannels);
@@ -128,9 +127,9 @@ export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, se
                     <SidebarOption
                         key={idx}
                         sub={styles.sidebarOption__sub}
-                        channel={channel} // Pass the properly formatted channel object
+                        channel={channel}
                         userEmail={userEmail}
-                        selectChannel={() => setSelectedChannel(channel)} // Correctly set selected channel
+                        selectChannel={() => handleSelectChannel(channel)}
                     />
                 ))}
                 <h3 className={styles.sidebarOption__channel} onClick={addChannel}>
@@ -166,6 +165,7 @@ export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, se
                                             channelNames={channels}
                                             setChannelNames={setChannels}
                                             onUpdateChannels={updateChannels}
+                                            onSelectChannel={setSelectedChannel}
                                         />
                                     </Dialog.Panel>
                                 </Transition.Child>

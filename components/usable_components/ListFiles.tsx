@@ -86,7 +86,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
     const generateGoogleAuthURL = () => {
         setListFilesModal(true);
         if (refreshCode && refreshCode.length > 0) {
-            getFiles(refreshCode);
+            getFiles();
         } else {
             window.location.href = googleAuthURL;
         }
@@ -100,7 +100,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
                 window.localStorage.setItem('code', code);
                 router.push('/usable/folder_path');
                 if (userEmail != 'test@admin.com') {
-                    getFiles(code);
+                    getFiles();
                 }
             }
             isInitialMount.current = false;
@@ -113,7 +113,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
         }
     }, [initialRecords]);
 
-    const getFiles = (code: string) => {
+    const getFiles = () => {
         showFilesLoadingAlert();
         // Guard clause to prevent multiple calls
         if (hasCalledGetFiles.current) {
@@ -122,7 +122,7 @@ const ListFiles: React.FC<Props> = ({ onSave }) => {
         }
         hasCalledGetFiles.current = true; // Mark as called
 
-        getListFiles(userEmail, code)
+        getListFiles(userEmail)
             .then(response => {
                 if (Array.isArray(response)) {
                     setInitialRecords(response);

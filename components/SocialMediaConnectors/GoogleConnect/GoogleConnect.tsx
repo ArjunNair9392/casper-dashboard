@@ -1,52 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import styles from './GoogleConnect.module.css';
-import { getGoogleRefreshCode, setGoogleRefreshCode } from '@/helpers/signInWithGoogle';
-import IconGoogle from '@/components/Icon/IconGoogle';
-import Swal from 'sweetalert2';
+import React from 'react';
+import { useGoogleOAuth } from '@/hooks/useGoogleOAuth';
+import { googleAuthURL } from '@/helpers/constants';
 
-const showAlert = async () => {
-    Swal.fire({
-        icon: 'success',
-        title: 'Account linked!',
-        text: 'You linked the Google account!',
-        padding: '2em',
-        customClass: 'sweet-alerts',
-    });
-};
+const GoogleConnect = () => {
+    const { isLoading, isConnected } = useGoogleOAuth();
 
-const GoogleConnect: React.FC = () => {
-    const [isConnected, setIsConnected] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    useEffect(() => {
-        // Check if there's a code in the URL and store it
-        setGoogleRefreshCode();
-
-        // Check localStorage for the code
-        const refreshToken = localStorage.getItem('code');
-        setIsConnected(!!refreshToken);
-    }, []);
-
-    const connectGoogleAccount = async () => {
-        if (isConnected) {
-            return;
-        } else {
-            setIsLoading(true);
-            await getGoogleRefreshCode();
-            setIsLoading(false);
-            const refreshToken = localStorage.getItem('code');
-            if (refreshToken) {
-                setIsConnected(true);
-                showAlert();
-            }
+    const connectGoogleAccount = () => {
+        if (!isLoading) {
+            window.location.href = googleAuthURL;
         }
     };
 
     return (
-        <div className="mb-5">
-            <button type="button" className="btn btn-secondary" onClick={connectGoogleAccount}>
-                <p className="mr-2"><IconGoogle /></p>
-                {isLoading ? 'Connecting...' : isConnected ? 'Connected' : 'Connect your Google Drive account'}
+        <div>
+            <button
+                type="button"
+                onClick={connectGoogleAccount}
+                disabled={isLoading || isConnected}
+                className={`flex items-center px-5 py-2 rounded-lg transition duration-300 ease-in-out shadow-md 
+                ${isConnected ? 'bg-green-500 text-white' : 'bg-blue-500 text-white hover:bg-blue-600'} 
+                ${isLoading ? 'cursor-wait opacity-50' : ''}`}
+            >
+                {isLoading ? 'Connecting...' : (isConnected ? 'Connected' : 'Connect Google Account')}
             </button>
         </div>
     );
