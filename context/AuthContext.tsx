@@ -7,7 +7,7 @@ interface AuthContextType {
     doesTokenExist: boolean;
     isAdmin: boolean | null;
     error: string | null;
-    userEmail: string;  // Add userEmail to the context type
+    userEmail: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

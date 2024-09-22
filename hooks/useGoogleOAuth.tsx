@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { connectGDrive } from '@/services/connectGdrive';
 import Swal from 'sweetalert2';
+import { useRouter } from 'next/router';
 
 const showConnectedAlert = async () => {
     Swal.fire({
@@ -27,22 +28,22 @@ export const useGoogleOAuth = () => {
     const { data: session } = useSession();
     const [isLoading, setIsLoading] = useState(false);
     const [isConnected, setIsConnected] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
-        const refreshToken = localStorage.getItem('code');
-        if (refreshToken) {
-            // If there's a refresh token, attempt to connect Google Drive
-            connectToGoogleDrive(refreshToken);
+        const queryCode = router.query.code as string;  // Fetch code from the URL
+        if (queryCode) {
+            connectToGoogleDrive(queryCode);
         }
-    }, []);
+    }, [router.query.code]);
 
-    const connectToGoogleDrive = async (refreshToken: string) => {
+    const connectToGoogleDrive = async (code: string) => {
         if (session?.user?.email) {
             setIsLoading(true);
-            const response = await connectGDrive(refreshToken, session.user.email);
+            const response = await connectGDrive(code, session.user.email);
             if (response?.status === 200) {
                 setIsConnected(true);
-                showConnectedAlert()
+                showConnectedAlert();
             } else {
                 showErrorAlert();
             }
@@ -50,5 +51,5 @@ export const useGoogleOAuth = () => {
         }
     };
 
-    return { isLoading, isConnected, connectToGoogleDrive };
+    return { isLoading, isConnected };
 };
