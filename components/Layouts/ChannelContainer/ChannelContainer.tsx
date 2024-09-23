@@ -10,6 +10,7 @@ import AddChannel from '@/components/AddChannel/AddChannel';
 import { Transition, Dialog } from '@headlessui/react';
 import { listFilesFromChannel } from '@/services/listFilesFromChannel';
 import { FileData } from '@/components/usable_components/Folders';
+import { useAuth } from '@/context/AuthContext';
 
 const showAlert = async () => {
     Swal.fire({
@@ -35,22 +36,14 @@ interface ChannelContainerProps {
 export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, setFileData }) => {
     const [channels, setChannels] = useState<Channel[]>([]);
     const { selectedChannel, setSelectedChannel } = useChannel();
-
-    const { data: session, status } = useSession();
-    const [userEmail, setUserEmail] = useState('test@admin.com');
+    const { userEmail } = useAuth();
     const [addChannelModal, setAddChannelModal] = useState(false);
 
-    useEffect(() => {
-        if (session?.user?.email) {
-            setUserEmail(session.user.email);
-        }
-    }, [session]);
 
     useEffect(() => {
         const fetchChannels = async () => {
             try {
                 const fetchedChannels = await listChannelsForUser(userEmail);
-
                 if (fetchedChannels && fetchedChannels.channel_names) {
                     const formattedChannels = fetchedChannels.channel_names.map((name: string) => ({
                         guid: `${name}-guid`,
@@ -62,7 +55,9 @@ export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, se
                     if (formattedChannels.length > 0) {
                         setSelectedChannel(formattedChannels[0]);
                     } else {
-                        showAlert();
+                        if (fetchedChannels.length == 0) {
+                            showAlert();
+                        }
                     }
                 }
             } catch (error) {

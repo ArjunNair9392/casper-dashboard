@@ -17,6 +17,7 @@ import IconCircleCheck from '@/components/Icon/IconCircleCheck';
 import ShareUsers from '@/components/ShareUsers/ShareUsers';
 import { getSelectedFiles } from '@/services/selectedFiles';
 import { useChannel } from '@/context/ChannelContext';
+import { useAuth } from '@/context/AuthContext';
 import styles from './Folders.module.css';
 
 export interface FileData {
@@ -36,8 +37,7 @@ interface FoldersProps {
 
 const Folders: React.FC<FoldersProps> = ({ fileData, disabled }) => {
     const dispatch = useDispatch();
-    const { data: session, status } = useSession();
-    const [userEmail, setUserEmail] = useState('test@admin.com');
+    const { userEmail } = useAuth();
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
@@ -48,12 +48,6 @@ const Folders: React.FC<FoldersProps> = ({ fileData, disabled }) => {
     const [search, setSearch] = useState('');
     const { selectedChannel } = useChannel();
     const [isMounted, setIsMounted] = useState(false);
-
-    useEffect(() => {
-        if (session?.user?.email) {
-            setUserEmail(session.user.email);
-        }
-    }, [session])
 
     useEffect(() => {
         dispatch(setPageTitle('Folders'));
@@ -91,7 +85,6 @@ const Folders: React.FC<FoldersProps> = ({ fileData, disabled }) => {
         setInitialRecords(sortBy(selectedRecords, 'name'));
         setRecordsData(selectedRecords);
         const fileIds = selectedRecords.map((record: { id: any; }) => record.id);
-        const userEmail: string = session?.user?.email ?? 'test@admin.com';
         processFiles(fileIds, userEmail, selectedChannel.toString());
     };
 
