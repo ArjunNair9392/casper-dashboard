@@ -5,9 +5,10 @@ import { useRouter } from 'next/router';
 
 interface AuthContextType {
     doesTokenExist: boolean;
-    isAdmin: boolean | null;
     error: string | null;
     userEmail: string;
+    userSlackWorkspace: {};
+    registeredCompany: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -16,9 +17,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { data: session } = useSession();
     const router = useRouter();
     const [doesTokenExist, setDoesTokenExist] = useState<boolean>(false);
-    const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [userEmail, setUserEmail] = useState<string>('');
+    const [userSlackWorkspace, setSlackUserWorkspaces] = useState({});
+    const [registeredCompany, setRegisteredCompany] = useState('');
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -32,7 +34,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 try {
                     const userData = await getUser(session.user.email);
                     setDoesTokenExist(userData.does_token_exist);
-                    setIsAdmin(userData.success);
+                    setSlackUserWorkspaces(userData.slack_workspace);
+                    setRegisteredCompany(userData.company_id)
 
                     if (!userData.success) {
                         router.push('other/company-registration');
@@ -46,9 +49,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         checkAdminStatus();
     }, [session, router]);
-
     return (
-        <AuthContext.Provider value={{ doesTokenExist, isAdmin, error, userEmail }}> {/* Provide userEmail */}
+        <AuthContext.Provider value={{ doesTokenExist, error, userEmail, userSlackWorkspace, registeredCompany }}>
             {children}
         </AuthContext.Provider>
     );

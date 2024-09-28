@@ -5,7 +5,11 @@ import { useSession } from "next-auth/react";
 import { addChannel } from '@/services/addChannel';
 import { listChannelsForUser } from '@/services/listChannels';
 import { Channel } from '../Layouts/ChannelContainer/ChannelContainer';
+import { useAuth } from '@/context/AuthContext';
 
+interface SlackWorkspace {
+    [key: string]: string;
+}
 
 interface AddChannelProps {
     setCreateFolderModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,6 +26,10 @@ const AddChannel: React.FC<AddChannelProps> = ({
     onUpdateChannels,
     onSelectChannel,
 }) => {
+    // Cast userSlackWorkspace as SlackWorkspace type
+    const { userSlackWorkspace } = useAuth() as { userSlackWorkspace: SlackWorkspace };
+
+    const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>(''); // Store workspace ID
     const [channel, setChannel] = useState<string>('');
     const [userEmail, setUserEmail] = useState<string>('');
     const [confirmShare, setConfirmShare] = useState(false);
@@ -36,6 +44,8 @@ const AddChannel: React.FC<AddChannelProps> = ({
     const handleShare = () => {
         if (channel.length === 0) {
             alert('Add channel to create');
+        } else if (!selectedWorkspaceId) {
+            alert('Select a workspace');
         } else {
             setConfirmShare(true);
         }
@@ -43,8 +53,9 @@ const AddChannel: React.FC<AddChannelProps> = ({
 
     const handleConfirmShare = async () => {
         try {
-            const response = await addChannel(channel, userEmail);
+            const workspaceObject = { [selectedWorkspaceId]: userSlackWorkspace[selectedWorkspaceId] };
 
+            const response = await addChannel(channel, userEmail, workspaceObject);
             if (response && response.success) {
                 // Fetch the updated list of channels
                 const updatedChannels = await listChannelsForUser(userEmail);
@@ -56,12 +67,10 @@ const AddChannel: React.FC<AddChannelProps> = ({
                         selected: false,
                     }));
 
-                    onUpdateChannels(formattedChannels); // Update channels state
-
-                    // Set the newly added channel as the default selected channel
+                    onUpdateChannels(formattedChannels);
                     const newChannel = formattedChannels.find((ch: { name: string; }) => ch.name === channel);
                     if (newChannel && onSelectChannel) {
-                        onSelectChannel(newChannel); // Set the newly added channel as selected
+                        onSelectChannel(newChannel);
                     }
                 }
             } else {
@@ -102,6 +111,24 @@ const AddChannel: React.FC<AddChannelProps> = ({
                     onChange={(e) => setChannel(e.target.value)}
                     className="p-2 mb-2 mr-2 ml-2 border border-gray-300 rounded max-w-lg"
                 />
+            </div>
+            <div className="px-5 py-3">
+                <label htmlFor="workspaceName" className="italic mb-2 p-2">
+                    Select workspace to add channel:
+                </label>
+                <select
+                    id="workspaceName"
+                    value={selectedWorkspaceId}
+                    onChange={(e) => setSelectedWorkspaceId(e.target.value)} // Set selected workspace ID
+                    className="p-2 mb-2 mr-2 ml-2 border border-gray-300 rounded max-w-lg"
+                >
+                    <option value="">Select a workspace:</option>
+                    {Object.keys(userSlackWorkspace).map((workspace_id) => (
+                        <option key={workspace_id} value={workspace_id}>
+                            {userSlackWorkspace[workspace_id]}
+                        </option>
+                    ))}
+                </select>
             </div>
             <div className="flex justify-end">
                 <button

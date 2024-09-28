@@ -19,7 +19,6 @@ const FolderPath = () => {
     const [fileData, setFileData] = useState<FileData[]>([]);
     const { selectedChannel, setSelectedChannel } = useChannel();
     const [disableListFiles, setDisableListFiles] = useState<boolean>(false);
-    const [refreshCode, setRefreshCode] = useState<string | null>(null);
     const { doesTokenExist } = useAuth();
 
     useEffect(() => {

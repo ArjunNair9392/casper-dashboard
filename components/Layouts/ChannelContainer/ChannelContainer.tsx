@@ -43,20 +43,22 @@ export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, se
     useEffect(() => {
         const fetchChannels = async () => {
             try {
-                const fetchedChannels = await listChannelsForUser(userEmail);
-                if (fetchedChannels && fetchedChannels.channel_names) {
-                    const formattedChannels = fetchedChannels.channel_names.map((name: string) => ({
-                        guid: `${name}-guid`,
-                        name,
-                        selected: false,
-                    }));
+                if (userEmail.length) {
+                    const fetchedChannels = await listChannelsForUser(userEmail);
+                    if (fetchedChannels && fetchedChannels.channel_names) {
+                        const formattedChannels = fetchedChannels.channel_names.map((name: string) => ({
+                            guid: `${name}-guid`,
+                            name,
+                            selected: false,
+                        }));
 
-                    setChannels(formattedChannels); // Set the channels here directly
-                    if (formattedChannels.length > 0) {
-                        setSelectedChannel(formattedChannels[0]);
-                    } else {
-                        if (fetchedChannels.length == 0) {
-                            showAlert();
+                        setChannels(formattedChannels); // Set the channels here directly
+                        if (formattedChannels.length > 0) {
+                            setSelectedChannel(formattedChannels[0]);
+                        } else {
+                            if (fetchedChannels.length == 0) {
+                                showAlert();
+                            }
                         }
                     }
                 }
