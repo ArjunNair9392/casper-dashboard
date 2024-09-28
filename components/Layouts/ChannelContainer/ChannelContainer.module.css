@@ -3,8 +3,12 @@
     margin-right: 20px;
     padding: 1.25rem;
     font-weight: 700;
-    background-color: rgb(67, 97, 238);
-    color: rgb(255,255,255);
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: #e5e7eb;
+    background-color: #fff;
+    height: 50%;
 }
 
 .sidebar__header {
@@ -84,6 +88,7 @@
 
 .sidebarOption__channel {
     padding: 10px 0;
+    cursor: pointer;
 }
 
 .sidebarOption__addChannel {

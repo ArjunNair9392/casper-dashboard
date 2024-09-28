@@ -76,7 +76,7 @@ const ShareUsers: React.FC<ShareUsersProps> = ({ setShareModal }) => {
     };
 
     return (
-        <div className="bg-[#fbfbfb] px-5 py-3 dark:bg-[#121c2c]">
+        <div className="bg-[#fff]px-5 py-3 dark:bg-[#121c2c]">
             <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200 dark:border-gray-600">
                 <h5 className="text-lg font-bold">Share file access</h5>
                 <button type="button" className="text-white-dark hover:text-dark" onClick={() => setShareModal(false)}>

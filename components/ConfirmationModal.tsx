@@ -29,7 +29,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, title, me
                         leaveTo="opacity-0 scale-95"
                     >
                         <Dialog.Panel as="div" className="panel my-8 w-full max-w-xl overflow-hidden rounded-lg border-0 p-0 text-black dark:text-white-dark">
-                            <div className="flex items-center justify-between bg-[#fbfbfb] px-5 py-3 dark:bg-[#121c2c]">
+                            <div className="flex items-center justify-between bg-[#fff]px-5 py-3 dark:bg-[#121c2c]">
                                 <h5 className="text-lg font-bold">{title}</h5>
                                 <button type="button" className="text-white-dark hover:text-dark" onClick={onCancel}>
                                     <IconX />

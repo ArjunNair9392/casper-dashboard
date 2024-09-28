@@ -9,6 +9,7 @@ interface AuthContextType {
     userEmail: string;
     userSlackWorkspace: {};
     registeredCompany: string;
+    isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,6 +22,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [userEmail, setUserEmail] = useState<string>('');
     const [userSlackWorkspace, setSlackUserWorkspaces] = useState({});
     const [registeredCompany, setRegisteredCompany] = useState('');
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         if (session?.user?.email) {
@@ -30,27 +32,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const checkAdminStatus = async () => {
+            setIsLoading(true);
             if (session?.user?.email) {
                 try {
                     const userData = await getUser(session.user.email);
                     setDoesTokenExist(userData.does_token_exist);
                     setSlackUserWorkspaces(userData.slack_workspace);
                     setRegisteredCompany(userData.company_id)
-
                     if (!userData.success) {
                         router.push('other/company-registration');
                     }
                 } catch (error) {
                     console.error("Failed to fetch user data:", error);
                     setError("Unable to verify admin status. Please try again later.");
+                } finally {
+                    setIsLoading(false);
                 }
+            } else {
+                setIsLoading(false);
             }
         };
 
         checkAdminStatus();
     }, [session, router]);
     return (
-        <AuthContext.Provider value={{ doesTokenExist, error, userEmail, userSlackWorkspace, registeredCompany }}>
+        <AuthContext.Provider value={{ doesTokenExist, error, userEmail, userSlackWorkspace, registeredCompany, isLoading }}>
             {children}
         </AuthContext.Provider>
     );
