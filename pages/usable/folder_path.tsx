@@ -4,6 +4,7 @@ import { ChannelContainer } from '@/components/Layouts/ChannelContainer/ChannelC
 import { useChannel } from '@/context/ChannelContext';
 import GoogleConnect from '@/components/SocialMediaConnectors/GoogleConnect/GoogleConnect';
 import { useAuth } from '@/context/AuthContext';
+import { getSession, GetSessionParams } from 'next-auth/react';
 
 interface FileData {
     id: string;
@@ -54,6 +55,24 @@ const FolderPath = () => {
             </div>
         </div>
     )
+};
+
+export const getServerSideProps = async (context: GetSessionParams | undefined) => {
+    const session = await getSession(context);
+
+    if (!session) {
+        // If not authenticated, redirect to login page
+        return {
+            redirect: {
+                destination: '/', // Redirect to your sign-in page
+                permanent: false,
+            },
+        };
+    }
+
+    return {
+        props: { session }, // Pass the session to the page component as a prop
+    };
 };
 
 export default FolderPath;

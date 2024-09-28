@@ -9,6 +9,7 @@ import IconMail from '@/components/Icon/IconMail';
 import IconPhoneCall from '@/components/Icon/IconPhoneCall';
 import IconPencil from '@/components/Icon/IconPencil';
 import { registerCompany } from '@/services/registrationService';
+import { getSession, GetSessionParams } from 'next-auth/react';
 
 const CompanyRegistration = () => {
     const dispatch = useDispatch();
@@ -138,6 +139,22 @@ const CompanyRegistration = () => {
             </div>
         </div>
     );
+};
+
+export const getServerSideProps = async (context: GetSessionParams | undefined) => {
+    const session = await getSession(context);
+
+    if (!session) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        };
+    }
+    return {
+        props: { session },
+    };
 };
 
 CompanyRegistration.getLayout = (page: any) => {
