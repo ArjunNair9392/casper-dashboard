@@ -1,6 +1,6 @@
 import React from "react";
 import Dashboard from "@/components/Dashboard/Dashboard";
-import Registration from "@/components/Registration/Registration";
+import Login from "@/components/Login/Login";
 import { useSession } from "next-auth/react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from 'next/router';
@@ -26,7 +26,7 @@ function Index() {
         }
     }
     if (status === "unauthenticated") {
-        return <Registration />;
+        return <Login />;
     }
 }
 

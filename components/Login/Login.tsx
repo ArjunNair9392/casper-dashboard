@@ -6,12 +6,10 @@ import React from 'react';
 import IconGoogle from '../Icon/IconGoogle';
 import { signIn } from "next-auth/react";
 
-const Registration: React.FC = () => {
-    const router = useRouter();
-
+const Login: React.FC = () => {
     const handleSignIn = async (platform: string) => {
         try {
-            await signIn(platform, { callbackUrl: '/usable/folder_path' });
+            await signIn(platform, { callbackUrl: '/' });
         } catch (error) {
             console.error('Error during sign-in:', error);
         }
@@ -93,4 +91,4 @@ const RightPanel: React.FC<RightPanelProps> = ({ handleSignIn }) => (
     </div>
 );
 
-export default Registration;
+export default Login;

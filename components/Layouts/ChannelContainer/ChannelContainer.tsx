@@ -4,7 +4,6 @@ import IconPlus from '@/components/Icon/IconPlus';
 import { listChannelsForUser } from '@/services/listChannels';
 import styles from './ChannelContainer.module.css';
 import { useChannel } from '@/context/ChannelContext';
-import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
 import AddChannel from '@/components/AddChannel/AddChannel';
 import { Transition, Dialog } from '@headlessui/react';
@@ -12,11 +11,11 @@ import { listFilesFromChannel } from '@/services/listFilesFromChannel';
 import { FileData } from '@/components/usable_components/Folders';
 import { useAuth } from '@/context/AuthContext';
 
-const showAlert = async () => {
+const noChannelsFoundAlert = async (userEmail: string) => {
     Swal.fire({
         icon: 'info',
         title: 'No channels found',
-        text: 'Looks like there are no channels for the user. Add channels to access the files.',
+        text: `Looks like there are no channels for ${userEmail}. Add channels to access the files.`,
         padding: '2em',
         customClass: 'sweet-alerts',
     });
@@ -25,7 +24,7 @@ const showAlert = async () => {
 export interface Channel {
     guid: string;
     name: string;
-    selected: boolean; // Ensure this property is present
+    selected: boolean;
 }
 
 interface ChannelContainerProps {
@@ -39,7 +38,6 @@ export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, se
     const { userEmail } = useAuth();
     const [addChannelModal, setAddChannelModal] = useState(false);
 
-
     useEffect(() => {
         const fetchChannels = async () => {
             try {
@@ -51,13 +49,12 @@ export const ChannelContainer: React.FC<ChannelContainerProps> = ({ fileData, se
                             name,
                             selected: false,
                         }));
-
-                        setChannels(formattedChannels); // Set the channels here directly
+                        setChannels(formattedChannels);
                         if (formattedChannels.length > 0) {
                             setSelectedChannel(formattedChannels[0]);
                         } else {
-                            if (fetchedChannels.length == 0) {
-                                showAlert();
+                            if (fetchedChannels.channel_names.length == 0) {
+                                noChannelsFoundAlert(userEmail);
                             }
                         }
                     }
