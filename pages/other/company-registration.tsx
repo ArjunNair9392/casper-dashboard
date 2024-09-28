@@ -4,7 +4,6 @@ import { setPageTitle, toggleLocale, toggleRTL } from '../../store/themeConfigSl
 import { useRouter } from 'next/router';
 import BlankLayout from '@/components/Layouts/BlankLayout';
 import { IRootState } from '@/store';
-import { useTranslation } from 'react-i18next';
 import IconUser from '@/components/Icon/IconUser';
 import IconMail from '@/components/Icon/IconMail';
 import IconPhoneCall from '@/components/Icon/IconPhoneCall';
